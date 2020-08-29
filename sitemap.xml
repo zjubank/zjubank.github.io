@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://zjubank.com/2020/08/26/gRPC-tutorial/</loc>
+    
+    <lastmod>2020-08-29</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://zjubank.com/2016/08/16/hexo-use-mathjax/</loc>
     
     <lastmod>2020-08-28</lastmod>
@@ -19,13 +26,6 @@
     <loc>http://zjubank.com/2016/11/04/mac-setup-rbenv-and-ruby/</loc>
     
     <lastmod>2020-08-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zjubank.com/2020/08/26/gRPC-tutorial/</loc>
-    
-    <lastmod>2020-08-26</lastmod>
     
   </url>
   
