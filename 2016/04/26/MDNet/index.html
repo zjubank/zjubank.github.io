@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="FDdrJxNJ7ZlaHtxMG0bqn8O4IY-B35_4cjHcxcdzP6A">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjubank.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="给实验室VOT打杂，在跑MDNet提出这玩意的Paper是这篇《Learning Multi-Domain Convolutional Neural Networks for Visual Tracking》1510.07945 MATLAB和花式配置Mex环境：Win10 Pro + MATLAB 2015b; OS X 10.11 + MATLAB 2015b + Xcode 7.3; Ubu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MDNet样例运行">
+<meta property="og:url" content="http://zjubank.com/2016/04/26/MDNet/index.html">
+<meta property="og:site_name" content="音ノ木坂学院">
+<meta property="og:description" content="给实验室VOT打杂，在跑MDNet提出这玩意的Paper是这篇《Learning Multi-Domain Convolutional Neural Networks for Visual Tracking》1510.07945 MATLAB和花式配置Mex环境：Win10 Pro + MATLAB 2015b; OS X 10.11 + MATLAB 2015b + Xcode 7.3; Ubu">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-04-25T17:56:13.000Z">
+<meta property="article:modified_time" content="2016-08-03T23:33:20.000Z">
+<meta property="article:author" content="ZJUBank">
+<meta property="article:tag" content="VOT">
+<meta property="article:tag" content="Mac">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="MATLAB">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://zjubank.com/2016/04/26/MDNet/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>MDNet样例运行 | 音ノ木坂学院</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-70857825-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-70857825-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">音ノ木坂学院</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">叶え！みんなの夢――</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">43</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">41</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zjubank.com/2016/04/26/MDNet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZJUBank">
+      <meta itemprop="description" content="「みんなで叶える物語」">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="音ノ木坂学院">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MDNet样例运行
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-04-26 01:56:13" itemprop="dateCreated datePublished" datetime="2016-04-26T01:56:13+08:00">2016-04-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2016-08-04 07:33:20" itemprop="dateModified" datetime="2016-08-04T07:33:20+08:00">2016-08-04</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2016/04/26/MDNet/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/04/26/MDNet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>给实验室VOT打杂，在跑<a target="_blank" rel="noopener" href="https://github.com/HyeonseobNam/MDNet">MDNet</a><br>提出这玩意的Paper是这篇《Learning Multi-Domain Convolutional Neural Networks for Visual Tracking》<a target="_blank" rel="noopener" href="http://arxiv.org/pdf/1510.07945v2.pdf">1510.07945</a></p>
+<h2 id="MATLAB和花式配置Mex"><a href="#MATLAB和花式配置Mex" class="headerlink" title="MATLAB和花式配置Mex"></a>MATLAB和花式配置Mex</h2><p>环境：Win10 Pro + MATLAB 2015b; OS X 10.11 + MATLAB 2015b + Xcode 7.3; Ubuntu Deskt5p 14.04.4 + CUDA 7.5 + MATLAB 2015b</p>
+<p>三个平台下MATLAB安装过程非常简单，只要注意Windows下使用standalone安装。<br>MDNet需要用到MATLAB下的编译器Mex，而Mex的配置略微复(dan)杂(teng)。下面是各种平台下为Mex安装C/C++编译器的方式。</p>
+<h3 id="Windows下配置mex"><a href="#Windows下配置mex" class="headerlink" title="Windows下配置mex"></a>Windows下配置mex</h3><p>Windows下的C/C++编译器是MinGW。但是直接安装的MinGW并不可以用于MATLAB，需要下载<a target="_blank" rel="noopener" href="http://www.mathworks.com/matlabcentral/fileexchange/52848-matlab-support-for-the-mingw-w64-c-c++-compiler-from-tdm-gcc">MATLAB Support for the MinGW-w64 C/C++ Compiler from TDM-GCC</a>，这里有一个下载好的<a target="_blank" rel="noopener" href="http://7xout0.com1.z0.glb.clouddn.com/mingw.mlpkginstall">mingw.mlpkginstall</a>（下载和安装都需要Mathwork的账号，注册一个即可）。<br>在MATLAB中打开刚刚下载的文件，按照提示一步一步继续，注意第一步需要取消一个默认选项。安装完成后直接使用<code>mex -setup</code>检查安装。</p>
+<p>以及有说法是最好先安装Windows SDK，去MS官网搜索对应windows版本的SDK安装，下载过程比较慢。</p>
+<h3 id="Mac下配置mex"><a href="#Mac下配置mex" class="headerlink" title="Mac下配置mex"></a>Mac下配置mex</h3><p>Mac下安装Xcode就携带了所需的SDK和compiler，但是MATLAB并不能自动关联Xcode，因此需要手动修改。在<a target="_blank" rel="noopener" href="http://cn.mathworks.com/matlabcentral/answers/246507-why-can-t-mex-find-a-supported-compiler-in-matlab-r2015b-after-i-upgraded-to-xcode-7-0">这个教程</a>下载需要的文件包<a target="_blank" rel="noopener" href="http://7xout0.com1.z0.glb.clouddn.com/xcode7_mexopts.zip">xcode7_mexopts.zip</a>，解压后有4个xml文件用于替换。<br>在MATLAB中</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd( prefdir );</span><br></pre></td></tr></table></figure>
+<p>如果有”mex_”开头的.xml文件就先删掉。接下来用Terminal操作。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /Applications/MATLAB_R2015b.app/bin/maci64/mexopts/</span><br><span class="line">sudo mkdir mexoptsContentsOLD</span><br><span class="line">sudo mv *.xml mexoptsContentsOLD/</span><br><span class="line">sudo cp %DownloadPath%/xcode7_mexopts/*.xml .</span><br></pre></td></tr></table></figure>
+<p>重启MATLAB，<code>mex -setup</code>检查是否已经配置完毕。</p>
+<h3 id="Linux下安装mex"><a href="#Linux下安装mex" class="headerlink" title="Linux下安装mex"></a>Linux下安装mex</h3><p>装好CUDA7.5和MATLAB_R2015b后，虽然提示还要安装编译器，但是运行<code>mex -setup</code>后却提示已经配置好编译器了……迷<br>因为这个有GPU所以接下来的东西都在Ubuntu上跑了。</p>
+<p>顺带一提在新的Ubuntu 16.04 LTS上装R2015b的话，打开运行会立刻崩，提示“MATLAB has encountered an internal problem and needs to close”。这时候去terminal里<code>sudo apt-get install matlab-support</code>，然后可以看到说这个电脑上有旧版本的gcc，会产生冲突，问是否rename，选Yes。安装完成后应该就不会再崩了。</p>
+<a id="more"></a>
+
+<h2 id="MatConvNet"><a href="#MatConvNet" class="headerlink" title="MatConvNet"></a>MatConvNet</h2><p>MDNet工程里自带1.0 btea10版本的MatConvNet。</p>
+<p>因为现在官网已经到了beta19版本，所以有些设置不太一样，不过基本可以按照官网来。</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &lt;MatConvNet&gt;</span><br><span class="line">addpath matlab</span><br></pre></td></tr></table></figure>
+<p>编译的时候，因为R2015b对应的CUDA应该是7.0版本，实验室使用了7.5，所以需要nvcc</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vl_compilenn(<span class="string">&#x27;enableGpu&#x27;</span>, <span class="built_in">true</span>, ...</span><br><span class="line">             <span class="string">&#x27;cudaRoot&#x27;</span>, <span class="string">&#x27;%cudaPath%/CUDA-7.0&#x27;</span>, ...</span><br><span class="line">             <span class="string">&#x27;cudaMethod&#x27;</span>, <span class="string">&#x27;nvcc&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>编译完成后</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run &lt;MatConvNet&gt;/matlab/vl_setupnn</span><br></pre></td></tr></table></figure>
+<p>因为beta10还没有vl_testnn所以就不用test了。</p>
+<h2 id="MDNet"><a href="#MDNet" class="headerlink" title="MDNet"></a>MDNet</h2><p>Readme上有个地方写的不太显眼，要先</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run setup_mdnet</span><br></pre></td></tr></table></figure>
+<p>添加一些目录，然后可以先运行一下demo：</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run tracking/demo_tracking</span><br></pre></td></tr></table></figure>
+<p>但是实际过程中经常发现提示找不到其他文件里的函数（虽然第一步已经添加了），于是把所有文件都放到同一个文件夹后就可以运行了。</p>
+<p>如果提示数据集有问题的话，建议查看一下路径、所有者、所属组和权限，基本都可以解决问题。</p>
+<h2 id="OTB数据集"><a href="#OTB数据集" class="headerlink" title="OTB数据集"></a>OTB数据集</h2><p>下OTB数据集还挺难受的……手动搞了个脚本，建议使用proxychains-ng。<br><a href="/uploads/MDNet/getTB-50.sh">TB-50 Sequences</a><br><a href="/uploads/MDNet/getTB-100.sh">The rest of TB-100 Sequences</a><br>下完了用文本编辑器做一下replace all还可以当list.txt用（</p>
+<h2 id="ImageNet数据集"><a href="#ImageNet数据集" class="headerlink" title="ImageNet数据集"></a>ImageNet数据集</h2><p>ImageNet的BoundingBox是以xml方式存放的，所以写了一个xml转成train.txt的小程序放在github上<br><a target="_blank" rel="noopener" href="https://github.com/zjubank/ImageNet-XMLtoTXT">戳我</a></p>
+<p>对于2013的数据，因为是分两层文件夹存放的，所以使用的时候先在全局变量那里补一层。以及最好写一个脚本，脚本也放到Github项目里了。（放的位置比较奇怪所以更新一下吧hhh）<br>以及在Ubuntu下编译运行不能过……所以最后把xml下载到Mac上跑了一圈就过了www</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/VOT/" rel="tag"># VOT</a>
+              <a href="/tags/Mac/" rel="tag"># Mac</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/MATLAB/" rel="tag"># MATLAB</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/04/26/esxi-virtual-machine-repair/" rel="prev" title="记一次ESXi虚拟机维修">
+      <i class="fa fa-chevron-left"></i> 记一次ESXi虚拟机维修
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/05/01/morse-code/" rel="next" title="撸了个莫尔斯编解码的小工具">
+      撸了个莫尔斯编解码的小工具 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MATLAB%E5%92%8C%E8%8A%B1%E5%BC%8F%E9%85%8D%E7%BD%AEMex"><span class="nav-number">1.</span> <span class="nav-text">MATLAB和花式配置Mex</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows%E4%B8%8B%E9%85%8D%E7%BD%AEmex"><span class="nav-number">1.1.</span> <span class="nav-text">Windows下配置mex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mac%E4%B8%8B%E9%85%8D%E7%BD%AEmex"><span class="nav-number">1.2.</span> <span class="nav-text">Mac下配置mex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux%E4%B8%8B%E5%AE%89%E8%A3%85mex"><span class="nav-number">1.3.</span> <span class="nav-text">Linux下安装mex</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MatConvNet"><span class="nav-number">2.</span> <span class="nav-text">MatConvNet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MDNet"><span class="nav-number">3.</span> <span class="nav-text">MDNet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OTB%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">4.</span> <span class="nav-text">OTB数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ImageNet%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">5.</span> <span class="nav-text">ImageNet数据集</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ZJUBank"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZJUBank</p>
+  <div class="site-description" itemprop="description">「みんなで叶える物語」</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjubank" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjubank" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZJUBank</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://zjubank.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://zjubank.com/2016/04/26/MDNet/";
+    this.page.identifier = "2016/04/26/MDNet/";
+    this.page.title = "MDNet样例运行";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://zjubank.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

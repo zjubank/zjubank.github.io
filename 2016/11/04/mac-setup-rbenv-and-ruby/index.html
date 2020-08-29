@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="FDdrJxNJ7ZlaHtxMG0bqn8O4IY-B35_4cjHcxcdzP6A">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjubank.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="What is Ruby ルビィ（误）其实是这个:  Ruby is…A dynamic, open source programming language with a focus on simplicity and productivity. It has an elegant syntax that is natural to read and easy to write.  最近接触了je">
+<meta property="og:type" content="article">
+<meta property="og:title" content="macOS Sierra设置rbenv和Ruby">
+<meta property="og:url" content="http://zjubank.com/2016/11/04/mac-setup-rbenv-and-ruby/index.html">
+<meta property="og:site_name" content="音ノ木坂学院">
+<meta property="og:description" content="What is Ruby ルビィ（误）其实是这个:  Ruby is…A dynamic, open source programming language with a focus on simplicity and productivity. It has an elegant syntax that is natural to read and easy to write.  最近接触了je">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://zjubank.com/uploads/mac-setup-rbenv-and-ruby/ruby.jpg">
+<meta property="article:published_time" content="2016-11-03T22:11:45.000Z">
+<meta property="article:modified_time" content="2020-08-28T18:11:48.176Z">
+<meta property="article:author" content="ZJUBank">
+<meta property="article:tag" content="Mac">
+<meta property="article:tag" content="Ruby">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://zjubank.com/uploads/mac-setup-rbenv-and-ruby/ruby.jpg">
+
+<link rel="canonical" href="http://zjubank.com/2016/11/04/mac-setup-rbenv-and-ruby/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>macOS Sierra设置rbenv和Ruby | 音ノ木坂学院</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-70857825-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-70857825-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">音ノ木坂学院</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">叶え！みんなの夢――</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">43</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">41</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zjubank.com/2016/11/04/mac-setup-rbenv-and-ruby/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZJUBank">
+      <meta itemprop="description" content="「みんなで叶える物語」">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="音ノ木坂学院">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          macOS Sierra设置rbenv和Ruby
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-11-04 06:11:45" itemprop="dateCreated datePublished" datetime="2016-11-04T06:11:45+08:00">2016-11-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-29 02:11:48" itemprop="dateModified" datetime="2020-08-29T02:11:48+08:00">2020-08-29</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2016/11/04/mac-setup-rbenv-and-ruby/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/04/mac-setup-rbenv-and-ruby/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="What-is-Ruby-ルビィ（误）"><a href="#What-is-Ruby-ルビィ（误）" class="headerlink" title="What is Ruby ルビィ（误）"></a>What is Ruby ルビィ（误）</h2><p><img src="/uploads/mac-setup-rbenv-and-ruby/ruby.jpg"><br>其实是<a target="_blank" rel="noopener" href="https://www.ruby-lang.org/en/">这个</a>:</p>
+<blockquote>
+<h3 id="Ruby-is…"><a href="#Ruby-is…" class="headerlink" title="Ruby is…"></a>Ruby is…</h3><p>A dynamic, open source programming language with a focus on simplicity and productivity. It has an elegant syntax that is natural to read and easy to write.</p>
+</blockquote>
+<p>最近接触了jekyll，所以需要在macOS上搭建一个Ruby的环境。折腾后发现坑其实不少，最后使用了rbenv + ruby-build的方法。</p>
+<a id="more"></a>
+
+<h2 id="macOS配置Ruby的问题"><a href="#macOS配置Ruby的问题" class="headerlink" title="macOS配置Ruby的问题"></a>macOS配置Ruby的问题</h2><h3 id="Ruby版本多"><a href="#Ruby版本多" class="headerlink" title="Ruby版本多"></a>Ruby版本多</h3><p>首先，我的macOS里已经安装过多个Ruby。去年研究rails的时候直接使用homebrew安装过Ruby，但是实际上安装Xcode后应该已经安装了一个命令行的Ruby。如果还购买过mac的Server.app（128RMB的那个），那个app里还会自带一个Ruby，情况就更加复杂了……</p>
+<h3 id="gem权限乱"><a href="#gem权限乱" class="headerlink" title="gem权限乱"></a>gem权限乱</h3><p>其次，之前安装的gem似乎有权限问题，并不是在用户目录下执行安装等各种操作。如果使用sudo权限安装，安装好的各种包也是root权限，就需要永远sudo下去，这个显然不合适。</p>
+<p>对于问题2，stackoverflow上有一个不错的<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/31972968/cant-install-gems-on-os-x-el-capitan">解决方法</a>，手动配置gem使用user-install，然而不能完全解决问题一。于是从rails官网挪了一份<a target="_blank" rel="noopener" href="https://gorails.com/setup/osx/10.12-sierra">文档</a>，使用<a target="_blank" rel="noopener" href="https://www.ruby-lang.org/en/documentation/installation/">rbenv + ruby-build</a><br>来解决这个问题。</p>
+<h2 id="安装rbenv前"><a href="#安装rbenv前" class="headerlink" title="安装rbenv前"></a>安装rbenv前</h2><h3 id="卸载rvm"><a href="#卸载rvm" class="headerlink" title="卸载rvm"></a>卸载rvm</h3><p>之前如果安装过rvm，需要先卸载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rvm implode</span><br></pre></td></tr></table></figure>
+<p>卸载完成后，rvm会提醒用户，检查<code>.bashrc</code>，<code>.bash_profile</code>等bash配置文件（或zsh对应的配置文件）里还有没有相关路径，以及<code>/etc/</code>，<code>~</code>下还有没有残余目录，都需要手动删除。</p>
+<h3 id="卸载已安装的gem包"><a href="#卸载已安装的gem包" class="headerlink" title="卸载已安装的gem包"></a>卸载已安装的gem包</h3><p>之前使用gem安装的一些包，最好也先卸载掉，使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gem uninstall -aIx</span><br></pre></td></tr></table></figure>
+<p>如果使用sudo权限安装过包，则上述语句无法卸载root权限的包，需要再做一步</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gem uninstall -aIx</span><br></pre></td></tr></table></figure>
+<p>如果之前配置过gem使用user-install，则还需要在<code>~/.gem</code>中有和没有相关配置时各执行一遍，确保卸载干净。</p>
+<h3 id="卸载brew安装的Ruby"><a href="#卸载brew安装的Ruby" class="headerlink" title="卸载brew安装的Ruby"></a>卸载brew安装的Ruby</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew uninstall ruby</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装rbenv和ruby-build"><a href="#安装rbenv和ruby-build" class="headerlink" title="安装rbenv和ruby-build"></a>安装rbenv和ruby-build</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew update # 可选</span><br><span class="line">brew install rbenv ruby-build</span><br></pre></td></tr></table></figure>
+<p>然后向<code>~/.bash_profile</code>里添加信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &#39;if which rbenv &gt; &#x2F;dev&#x2F;null; then eval &quot;$(rbenv init -)&quot;; fi&#39; &gt;&gt; ~&#x2F;.bash_profile</span><br></pre></td></tr></table></figure>
+<p>对于zsh（oh-my-zsh）用户，因为会从<code>~/.zshrc</code>里读取，所以就在zshrc里加了一行<code>source ~/.bash_profile</code></p>
+<p>然后安装Ruby</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rbenv install 2.3.1</span><br><span class="line">rbenv global 2.3.1</span><br></pre></td></tr></table></figure>
+<p>因为是编译安装，所以等待时间稍长。安装完成后可以用<code>ruby -v</code>检查一下版本是不是刚刚安装的2.3.1。</p>
+<h2 id="使用gem安装需要的包"><a href="#使用gem安装需要的包" class="headerlink" title="使用gem安装需要的包"></a>使用gem安装需要的包</h2><p>以jekyll为例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gem install jekyll</span><br></pre></td></tr></table></figure>
+<p>为了确保rbenv可以执行刚刚安装的包， <strong>一定要做</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rbenv rehash</span><br></pre></td></tr></table></figure>
+<p>这样rbenv才能“看到”新安装的包。</p>
+<p>安装完成后就可以测试一下刚安装的包<code>jekyll -v</code>，并尝试调用。</p>
+<p>需要注意，以上所有步骤应该都不需要sudo。如果其中某些步骤还提示权限问题，请仔细检查步骤。</p>
+<h2 id="Tips：关于gem换源"><a href="#Tips：关于gem换源" class="headerlink" title="Tips：关于gem换源"></a>Tips：关于gem换源</h2><p>之前使用的是淘宝源，现在已交给<a target="_blank" rel="noopener" href="http://gems.ruby-china.org/">Ruby China</a>维护。<br>因此原来配置的<code>ruby.taobao.org</code>，现在要改成<code>gems.ruby-china.org</code>才能用w</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Mac/" rel="tag"># Mac</a>
+              <a href="/tags/Ruby/" rel="tag"># Ruby</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/10/05/mac-install-raspbian/" rel="prev" title="Mac在SD卡里灌注树莓派用Raspbian">
+      <i class="fa fa-chevron-left"></i> Mac在SD卡里灌注树莓派用Raspbian
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/03/23/mac-setup-gdb-and-lldb/" rel="next" title="macOS Sierra配置GDB和lldb">
+      macOS Sierra配置GDB和lldb <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-is-Ruby-%E3%83%AB%E3%83%93%E3%82%A3%EF%BC%88%E8%AF%AF%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">What is Ruby ルビィ（误）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Ruby-is%E2%80%A6"><span class="nav-number">1.1.</span> <span class="nav-text">Ruby is…</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#macOS%E9%85%8D%E7%BD%AERuby%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">macOS配置Ruby的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Ruby%E7%89%88%E6%9C%AC%E5%A4%9A"><span class="nav-number">2.1.</span> <span class="nav-text">Ruby版本多</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gem%E6%9D%83%E9%99%90%E4%B9%B1"><span class="nav-number">2.2.</span> <span class="nav-text">gem权限乱</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85rbenv%E5%89%8D"><span class="nav-number">3.</span> <span class="nav-text">安装rbenv前</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BDrvm"><span class="nav-number">3.1.</span> <span class="nav-text">卸载rvm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD%E5%B7%B2%E5%AE%89%E8%A3%85%E7%9A%84gem%E5%8C%85"><span class="nav-number">3.2.</span> <span class="nav-text">卸载已安装的gem包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BDbrew%E5%AE%89%E8%A3%85%E7%9A%84Ruby"><span class="nav-number">3.3.</span> <span class="nav-text">卸载brew安装的Ruby</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85rbenv%E5%92%8Cruby-build"><span class="nav-number">4.</span> <span class="nav-text">安装rbenv和ruby-build</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8gem%E5%AE%89%E8%A3%85%E9%9C%80%E8%A6%81%E7%9A%84%E5%8C%85"><span class="nav-number">5.</span> <span class="nav-text">使用gem安装需要的包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tips%EF%BC%9A%E5%85%B3%E4%BA%8Egem%E6%8D%A2%E6%BA%90"><span class="nav-number">6.</span> <span class="nav-text">Tips：关于gem换源</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ZJUBank"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZJUBank</p>
+  <div class="site-description" itemprop="description">「みんなで叶える物語」</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjubank" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjubank" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZJUBank</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://zjubank.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://zjubank.com/2016/11/04/mac-setup-rbenv-and-ruby/";
+    this.page.identifier = "2016/11/04/mac-setup-rbenv-and-ruby/";
+    this.page.title = "macOS Sierra设置rbenv和Ruby";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://zjubank.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

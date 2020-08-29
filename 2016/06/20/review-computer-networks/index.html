@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="FDdrJxNJ7ZlaHtxMG0bqn8O4IY-B35_4cjHcxcdzP6A">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjubank.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引言使用计算机网络 计算机网络 和 分布式系统 普适计算(Ubiquitous computing)属于Home applications">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计网复习坑">
+<meta property="og:url" content="http://zjubank.com/2016/06/20/review-computer-networks/index.html">
+<meta property="og:site_name" content="音ノ木坂学院">
+<meta property="og:description" content="引言使用计算机网络 计算机网络 和 分布式系统 普适计算(Ubiquitous computing)属于Home applications">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-06-20T10:06:40.000Z">
+<meta property="article:modified_time" content="2016-07-19T06:55:24.000Z">
+<meta property="article:author" content="ZJUBank">
+<meta property="article:tag" content="Review">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://zjubank.com/2016/06/20/review-computer-networks/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>计网复习坑 | 音ノ木坂学院</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-70857825-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-70857825-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">音ノ木坂学院</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">叶え！みんなの夢――</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">43</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">41</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zjubank.com/2016/06/20/review-computer-networks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZJUBank">
+      <meta itemprop="description" content="「みんなで叶える物語」">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="音ノ木坂学院">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计网复习坑
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-06-20 18:06:40" itemprop="dateCreated datePublished" datetime="2016-06-20T18:06:40+08:00">2016-06-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2016-07-19 14:55:24" itemprop="dateModified" datetime="2016-07-19T14:55:24+08:00">2016-07-19</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2016/06/20/review-computer-networks/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/06/20/review-computer-networks/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><h3 id="使用计算机网络"><a href="#使用计算机网络" class="headerlink" title="使用计算机网络"></a>使用计算机网络</h3><ol>
+<li>计算机网络 和 分布式系统</li>
+<li>普适计算(Ubiquitous computing)属于Home applications</li>
+</ol>
+<a id="more"></a>
+
+<h3 id="网络硬件"><a href="#网络硬件" class="headerlink" title="网络硬件"></a>网络硬件</h3><h4 id="PAN-Personal-LAN-Local-MAN-Metropolitan-WAN-Wide"><a href="#PAN-Personal-LAN-Local-MAN-Metropolitan-WAN-Wide" class="headerlink" title="PAN(Personal), LAN(Local), MAN(Metropolitan), WAN(Wide)"></a>PAN(Personal), LAN(Local), MAN(Metropolitan), WAN(Wide)</h4><ul>
+<li>PAN: Bluetooth, RFID等</li>
+<li>LAN: 因为区域被限制所以速度可以很快，802.11(WiFi) AP、Switched Ethernet等</li>
+<li>LAN: 静态和动态，分配时间槽(time slot)的方式不同。静态浪费大，所以多用动态</li>
+<li>MAN: DQDB, cable TV, WIMAX</li>
+<li>WAN = subnets + hosts</li>
+<li>Subnet + hosts -&gt; WAN -&gt; network</li>
+<li>Cable + hosts -&gt; LAN -&gt; network</li>
+<li>Many interconnected networks -&gt; internetworks</li>
+</ul>
+<h4 id="Broadcast-networks-广播式网络-Point-to-point-networks-点对点网络"><a href="#Broadcast-networks-广播式网络-Point-to-point-networks-点对点网络" class="headerlink" title="Broadcast networks(广播式网络) Point-to-point networks(点对点网络)"></a>Broadcast networks(广播式网络) Point-to-point networks(点对点网络)</h4><p>Unicasting(单播),Broadcasting(广播),Multicasting(组播)</p>
+<h4 id="协议层次结构"><a href="#协议层次结构" class="headerlink" title="协议层次结构"></a>协议层次结构</h4><ul>
+<li>协议指通信双方就如何通信的一种约定</li>
+<li>不同机器上构成响应层次的实体称为对等体</li>
+<li>层和协议的集合称为网络体系结构(network architecture)</li>
+<li>一层一个协议，称为协议栈(protocol stack)</li>
+<li>层次设计问题<ul>
+<li>寻址和命名</li>
+<li>信道控制</li>
+<li>检错和纠错</li>
+<li>流量控制</li>
+<li>分解和重装</li>
+<li>复用/解复用</li>
+<li>路由</li>
+<li>拥塞(congestion)、实时、服务质量(QoS)、保密性、验证、完整性等</li>
+</ul>
+</li>
+</ul>
+<h4 id="面向连接与无连接"><a href="#面向连接与无连接" class="headerlink" title="面向连接与无连接"></a>面向连接与无连接</h4><ol>
+<li>面向连接<ul>
+<li>可靠的报文流：顺序页面</li>
+<li>可靠的字节流：移动下载</li>
+<li>不可靠的连接：IP语音</li>
+</ul>
+</li>
+<li>无连接<ul>
+<li>不可靠的数据报：垃圾邮件</li>
+<li>有确认的数据报：文本消息</li>
+<li>请求-应答：数据库查询</li>
+</ul>
+</li>
+</ol>
+<h4 id="服务原语-primitive"><a href="#服务原语-primitive" class="headerlink" title="服务原语(primitive)"></a>服务原语(primitive)</h4><p>LISTEN, CONNECT, ACCEPT, RECEIVE, SEND, DISCONNECT</p>
+<h4 id="服务与协议的关系"><a href="#服务与协议的关系" class="headerlink" title="服务与协议的关系"></a>服务与协议的关系</h4><h5 id="OSI参考模型"><a href="#OSI参考模型" class="headerlink" title="OSI参考模型"></a>OSI参考模型</h5><ul>
+<li>需要一个不同抽象体的地方创建一层</li>
+<li>每一层都应该执行一个明确定义的功能</li>
+<li>每一层功能的选择应该向定义国际化标准协议的目标看齐</li>
+<li>层与层边界的选择应该使跨越接口的信息流最小</li>
+<li>层数应该足够多，保证不同的功能不会被混杂在同一层中；层数也不能太多，以免体系结构变得过于庞大</li>
+</ul>
+<ol>
+<li>物理层(Physical layer)：关注在一条信道上传输原始比特<ul>
+<li>用什么电子信号</li>
+<li>传输是否可以两方向同时进行</li>
+<li>如何初始化连接</li>
+<li>连接器有多少针</li>
+</ul>
+</li>
+<li>数据链路层(Data link layer)：讲原始传输设施变成没有漏检传输错误的线路<ul>
+<li>数据帧</li>
+<li>检错和纠错</li>
+<li>流量调节机制</li>
+<li>MAC：控制共享信道</li>
+</ul>
+</li>
+<li>网络层(Network layer)：控制子网的运行<ul>
+<li>数据包从源端到接收方</li>
+<li>拥塞控制</li>
+<li>异构网络</li>
+</ul>
+</li>
+<li>传输层(Transport layer)：接收上一层的数据，必要的时候分割成较小单元并传递给网络层<ul>
+<li>是端到端的层</li>
+</ul>
+</li>
+<li>会话层(Session layer)：允许不同机器上的用户建立会话<ul>
+<li>对话控制、令牌管理、同步功能等</li>
+</ul>
+</li>
+<li>表示层(Presentation layer)：所传递信息的语法和语义<ul>
+<li>如Big endian和Little endian</li>
+</ul>
+</li>
+<li>应用层(Application layer)：包含各种协议<ul>
+<li>HTTP、telnet、FTP、DNS、DHCP、SMTP、POP等</li>
+</ul>
+</li>
+</ol>
+<h5 id="TCP-IP参考模型"><a href="#TCP-IP参考模型" class="headerlink" title="TCP/IP参考模型"></a>TCP/IP参考模型</h5><ul>
+<li>Application -&gt; Transport(TCP/UDP) -&gt; Internet(IP/ICMP) -&gt; Link/Host-to-network(DSL,802.11…)</li>
+<li>Internet layer: defines an official packet format and protocol called IP(Internet Protocol)</li>
+<li>Transport layer: 允许源主机和目标主机上的对等实体进行对话<ul>
+<li>TCP(Transport Control Protocol, 传输控制协议): a reliable connection-oriented protocol</li>
+<li>UDP(User Datagram Protocol, 用户数据报协议): an unreliable, connectionless protocol</li>
+</ul>
+</li>
+</ul>
+<h5 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h5><ul>
+<li>OSI区分了服务/接口/协议，TCP/IP没有</li>
+<li>OSI现有的模型才有的协议，TCP现有的协议</li>
+<li>OSI同时面向连接/无连接，TCP在网络层只支持无连接、传输层支持两种</li>
+</ul>
+<h2 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h2><h3 id="信道的最大数据速率"><a href="#信道的最大数据速率" class="headerlink" title="信道的最大数据速率"></a>信道的最大数据速率</h3><p>尼奎斯定理：带宽B，每秒2B次采样，信号包含V个离散等级，最大数据速率 = 2B*log2V (bit/s)<br>香农定理：信噪比S/N时最大比特率 B*log2(1+S/N)</p>
+<h3 id="无线传输"><a href="#无线传输" class="headerlink" title="无线传输"></a>无线传输</h3><p>带宽越宽，速率越高</p>
+<ol>
+<li>跳频扩频</li>
+<li>直接序列扩频：码分多址(CDMA)he</li>
+<li>超宽带通信</li>
+</ol>
+<p>塔越高，传得越远。但是会有多径衰落(multipath fading)和天气影响</p>
+<h3 id="数字调制"><a href="#数字调制" class="headerlink" title="数字调制"></a>数字调制</h3><ul>
+<li>基带传输</li>
+<li>通带传输</li>
+</ul>
+<h3 id="多路复用"><a href="#多路复用" class="headerlink" title="多路复用"></a>多路复用</h3><ul>
+<li>频分复用</li>
+<li>时分复用</li>
+<li>码分复用</li>
+</ul>
+<h2 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h2><h3 id="提供给网络层的服务"><a href="#提供给网络层的服务" class="headerlink" title="提供给网络层的服务"></a>提供给网络层的服务</h3><ol>
+<li>无确认无连接：不确认帧。错误率低（如以太网）、实时通信（语音传输）</li>
+<li>有确认无连接：每一帧都需要单独确认。信道差（如WiFi）</li>
+<li>有确认有链接：每一帧都编号、确保每一帧都收到且每一帧都被接受一次。长距离切不可靠（如卫星信道或长途电话）</li>
+</ol>
+<h3 id="成帧"><a href="#成帧" class="headerlink" title="成帧"></a>成帧</h3><ol>
+<li>字节计数法（不用）</li>
+<li>字节填充的标识字节法：数据中的标志字节需要转义、转义字符也需要转义（PPP）</li>
+<li>比特填充的标志比特法：</li>
+<li>物理层编码违禁法</li>
+</ol>
+<h3 id="纠错码"><a href="#纠错码" class="headerlink" title="纠错码"></a>纠错码</h3><ol>
+<li>Hamming code<ul>
+<li>m个消息位和r个校验位，(m+r+1)&lt;=2^r (求r用)</li>
+<li>计算出m+r后填入r，把所有1的位置改写成二进制。对这些位置求异或，结果直接填入r的位置</li>
+<li>检测d个错误需要d+1海明距离的海明码；改正d个错误需要2d+1</li>
+<li>只能纠错1位</li>
+</ul>
+</li>
+<li>奇偶校验</li>
+<li>校验和</li>
+<li>CRC<ul>
+<li>G是r+1为，则在M后加上r个0</li>
+<li>不借位减法，做完余数加上4个0，跟在M后面</li>
+</ul>
+</li>
+</ol>
+<h3 id="Utilization-of-Stop-and-Wait"><a href="#Utilization-of-Stop-and-Wait" class="headerlink" title="Utilization of Stop-and-Wait"></a>Utilization of Stop-and-Wait</h3><p>T_prop = Distance / Speed-of-Signal (注意是两倍距离)<br>T_frame = Frame-Size / Bit-Rate<br>Utilization = T_frame / (2*T_prop + T_frame)<br>α = T_prop / T_frame</p>
+<p>改进：Utilization of window<br>Utilization = N * T_frame / (2*T_prop + T_frame)</p>
+<h3 id="Go-Back-N-ARQ"><a href="#Go-Back-N-ARQ" class="headerlink" title="Go-Back-N ARQ"></a>Go-Back-N ARQ</h3><p>在阻塞之前发送w个帧<br>带宽-延迟乘积：BD<br>w = 2*BD+1<br>链路利用率&lt;= w/(1+2*BD)</p>
+<h3 id="PPP"><a href="#PPP" class="headerlink" title="PPP"></a>PPP</h3><p><del>有空再回来看</del></p>
+<h2 id="介质访问控制子层"><a href="#介质访问控制子层" class="headerlink" title="介质访问控制子层"></a>介质访问控制子层</h2><h3 id="静态"><a href="#静态" class="headerlink" title="静态"></a>静态</h3><ol>
+<li>TDM：时分复用</li>
+<li>FDM：频分多路复用</li>
+</ol>
+<h3 id="ALOHA"><a href="#ALOHA" class="headerlink" title="ALOHA"></a>ALOHA</h3><ol>
+<li>纯ALOHA：信道使用率很低</li>
+<li>slot-ALOHA：一个时间槽一帧，转换成脉冲输出</li>
+</ol>
+<h3 id="CSMA（载波侦听多路访问协议）"><a href="#CSMA（载波侦听多路访问协议）" class="headerlink" title="CSMA（载波侦听多路访问协议）"></a>CSMA（载波侦听多路访问协议）</h3><ol>
+<li>CSMA：监听信道，如非空闲则监听直到空闲开始发送</li>
+<li>非坚持CSMA：监听信道，如果非空闲则停止监听，随机等待一段时间后重复上述算法。利用率更高，但是延迟也更高。</li>
+<li>带冲突检测的CSMA（CSMA/CD）：以太网，可以看做slot-ALOHA，时间槽2τ（τ是最远两个站之间传播时间）</li>
+<li>带冲突避免的CSMA（CSMA/CA）：无线局域网，早期后退避免冲突、利用确认推断是否发生冲突。是分布式协调功能（DCF）</li>
+</ol>
+<h3 id="MACA（冲突避免多路访问）"><a href="#MACA（冲突避免多路访问）" class="headerlink" title="MACA（冲突避免多路访问）"></a>MACA（冲突避免多路访问）</h3><p>核心思想：使用一个短帧通知附近的站，放置在接下来的大传输中冲突</p>
+<ol>
+<li>RTS：30字节，包括发送数据帧的长度。其他收到RTS的站在确保CTS收到之前要沉默。</li>
+<li>CTS：也包含数据帧长度。其他收到CTS的站在确保数据传输完成前要沉默。</li>
+<li>仍会有冲突，比如两个站同时发送RTS。此时没有收到CTS的说明传输失败，等一段时间再试</li>
+</ol>
+<h3 id="以太网"><a href="#以太网" class="headerlink" title="以太网"></a>以太网</h3><p>802.3: T/L&lt;=0x600=1536</p>
+<h3 id="网桥（交换机）"><a href="#网桥（交换机）" class="headerlink" title="网桥（交换机）"></a>网桥（交换机）</h3><p>工作在数据链路层<br>Bridge里不能有环路，所以要形成Tree</p>
+<ol>
+<li>向后学习算法<ul>
+<li>目的端口==来源端口：立即丢弃该帧</li>
+<li>不同：转发到目标端口</li>
+<li>未知情况：泛洪算法，向除来源端口外所有端口转发该帧</li>
+<li>向后：可以通过“来源端口=目的端口”判断</li>
+</ul>
+</li>
+<li>生成树算法<ul>
+<li>先基于MAC地址选择根，标识符最低的为根</li>
+<li>构造从根到每个网桥的最短路径树</li>
+<li>并不是所有连接（甚至桥）都必须出现在树中，因为需要关闭一些端口防止出现环路</li>
+</ul>
+</li>
+</ol>
+<h3 id="联网设备"><a href="#联网设备" class="headerlink" title="联网设备"></a>联网设备</h3><ul>
+<li>应用层：应用网关</li>
+<li>传输层：传输网关</li>
+<li>网络层：路由器</li>
+<li>数据链路层：网桥、交换机</li>
+<li>物理层：中继器、集线器</li>
+</ul>
+<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><h3 id="网络层的设计问题"><a href="#网络层的设计问题" class="headerlink" title="网络层的设计问题"></a>网络层的设计问题</h3><ol>
+<li>存储转发分组交换</li>
+<li>为传输层提供的服务</li>
+<li>面向连接服务的实现</li>
+<li>虚电路或数据报子网的比较</li>
+</ol>
+<h3 id="路由算法"><a href="#路由算法" class="headerlink" title="路由算法"></a>路由算法</h3><ol>
+<li>最短路径路由：Dijkstra</li>
+<li>泛洪算法：需要给包头加一个生命长度，一般是到目的的距离，最坏是网络的直径</li>
+<li>距离向量路由：每个路由器维护一张表，表中列出当前已知的到每个目标的最佳距离，以及所用的链路。邻居之间交换信息更新。（RIP）<ul>
+<li>计算方法：收敛</li>
+</ul>
+</li>
+<li>链路状态路由：（OSPF）<ol>
+<li>发现它的邻居节点，并了解其网络地址</li>
+<li>设置到每个邻居节点的距离或成本度量值</li>
+<li>构造一个包含所有刚刚获知的链路信息包</li>
+<li>将这个包发送给所有其他的路由器，并接受来自所有其它路由器的信息包</li>
+<li>计算出到每个其它路由器的最短路径（Dijkstra）</li>
+</ol>
+</li>
+<li>分层路由：region -&gt; cluster -&gt; zone -&gt; group …</li>
+</ol>
+<h3 id="网络互联"><a href="#网络互联" class="headerlink" title="网络互联"></a>网络互联</h3><p><del>回头再说</del></p>
+<h3 id="IP"><a href="#IP" class="headerlink" title="IP"></a>IP</h3><p><del>回头再说</del></p>
+<h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><ul>
+<li>帧：数据链路层</li>
+<li>包：网络层</li>
+<li>段：传输层</li>
+</ul>
+<h3 id="Berkeley-Socket"><a href="#Berkeley-Socket" class="headerlink" title="Berkeley Socket"></a>Berkeley Socket</h3><p><del>其实没啥</del></p>
+<h2 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h2><h2 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h2>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Review/" rel="tag"># Review</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/05/29/macbook-keyboard/" rel="prev" title="MacBook拆键帽记录">
+      <i class="fa fa-chevron-left"></i> MacBook拆键帽记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/06/28/review-goutongjiqiao/" rel="next" title="沟通技巧复习">
+      沟通技巧复习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C"><span class="nav-number">1.1.</span> <span class="nav-text">使用计算机网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%A1%AC%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">网络硬件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PAN-Personal-LAN-Local-MAN-Metropolitan-WAN-Wide"><span class="nav-number">1.2.1.</span> <span class="nav-text">PAN(Personal), LAN(Local), MAN(Metropolitan), WAN(Wide)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Broadcast-networks-%E5%B9%BF%E6%92%AD%E5%BC%8F%E7%BD%91%E7%BB%9C-Point-to-point-networks-%E7%82%B9%E5%AF%B9%E7%82%B9%E7%BD%91%E7%BB%9C"><span class="nav-number">1.2.2.</span> <span class="nav-text">Broadcast networks(广播式网络) Point-to-point networks(点对点网络)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%8F%E8%AE%AE%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.3.</span> <span class="nav-text">协议层次结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E8%BF%9E%E6%8E%A5%E4%B8%8E%E6%97%A0%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.2.4.</span> <span class="nav-text">面向连接与无连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%8E%9F%E8%AF%AD-primitive"><span class="nav-number">1.2.5.</span> <span class="nav-text">服务原语(primitive)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.2.6.</span> <span class="nav-text">服务与协议的关系</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#OSI%E5%8F%82%E8%80%83%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.6.1.</span> <span class="nav-text">OSI参考模型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#TCP-IP%E5%8F%82%E8%80%83%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.6.2.</span> <span class="nav-text">TCP&#x2F;IP参考模型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94"><span class="nav-number">1.2.6.3.</span> <span class="nav-text">对比</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E5%B1%82"><span class="nav-number">2.</span> <span class="nav-text">物理层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E9%81%93%E7%9A%84%E6%9C%80%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%80%9F%E7%8E%87"><span class="nav-number">2.1.</span> <span class="nav-text">信道的最大数据速率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E7%BA%BF%E4%BC%A0%E8%BE%93"><span class="nav-number">2.2.</span> <span class="nav-text">无线传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6"><span class="nav-number">2.3.</span> <span class="nav-text">数字调制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">2.4.</span> <span class="nav-text">多路复用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82"><span class="nav-number">3.</span> <span class="nav-text">数据链路层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E4%BE%9B%E7%BB%99%E7%BD%91%E7%BB%9C%E5%B1%82%E7%9A%84%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.1.</span> <span class="nav-text">提供给网络层的服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%90%E5%B8%A7"><span class="nav-number">3.2.</span> <span class="nav-text">成帧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%A0%E9%94%99%E7%A0%81"><span class="nav-number">3.3.</span> <span class="nav-text">纠错码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Utilization-of-Stop-and-Wait"><span class="nav-number">3.4.</span> <span class="nav-text">Utilization of Stop-and-Wait</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Go-Back-N-ARQ"><span class="nav-number">3.5.</span> <span class="nav-text">Go-Back-N ARQ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PPP"><span class="nav-number">3.6.</span> <span class="nav-text">PPP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E5%AD%90%E5%B1%82"><span class="nav-number">4.</span> <span class="nav-text">介质访问控制子层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81"><span class="nav-number">4.1.</span> <span class="nav-text">静态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ALOHA"><span class="nav-number">4.2.</span> <span class="nav-text">ALOHA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSMA%EF%BC%88%E8%BD%BD%E6%B3%A2%E4%BE%A6%E5%90%AC%E5%A4%9A%E8%B7%AF%E8%AE%BF%E9%97%AE%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">CSMA（载波侦听多路访问协议）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MACA%EF%BC%88%E5%86%B2%E7%AA%81%E9%81%BF%E5%85%8D%E5%A4%9A%E8%B7%AF%E8%AE%BF%E9%97%AE%EF%BC%89"><span class="nav-number">4.4.</span> <span class="nav-text">MACA（冲突避免多路访问）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91"><span class="nav-number">4.5.</span> <span class="nav-text">以太网</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E6%A1%A5%EF%BC%88%E4%BA%A4%E6%8D%A2%E6%9C%BA%EF%BC%89"><span class="nav-number">4.6.</span> <span class="nav-text">网桥（交换机）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%94%E7%BD%91%E8%AE%BE%E5%A4%87"><span class="nav-number">4.7.</span> <span class="nav-text">联网设备</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%B1%82"><span class="nav-number">5.</span> <span class="nav-text">网络层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%B1%82%E7%9A%84%E8%AE%BE%E8%AE%A1%E9%97%AE%E9%A2%98"><span class="nav-number">5.1.</span> <span class="nav-text">网络层的设计问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E7%AE%97%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">路由算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BA%92%E8%81%94"><span class="nav-number">5.3.</span> <span class="nav-text">网络互联</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IP"><span class="nav-number">5.4.</span> <span class="nav-text">IP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82"><span class="nav-number">6.</span> <span class="nav-text">传输层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Berkeley-Socket"><span class="nav-number">6.1.</span> <span class="nav-text">Berkeley Socket</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82"><span class="nav-number">7.</span> <span class="nav-text">应用层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8"><span class="nav-number">8.</span> <span class="nav-text">网络安全</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ZJUBank"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZJUBank</p>
+  <div class="site-description" itemprop="description">「みんなで叶える物語」</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjubank" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjubank" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZJUBank</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://zjubank.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://zjubank.com/2016/06/20/review-computer-networks/";
+    this.page.identifier = "2016/06/20/review-computer-networks/";
+    this.page.title = "计网复习坑";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://zjubank.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

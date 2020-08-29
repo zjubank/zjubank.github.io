@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="FDdrJxNJ7ZlaHtxMG0bqn8O4IY-B35_4cjHcxcdzP6A">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjubank.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="语音部分语音技术引言语音链 想说阶段（语言学层面）-&gt;说出阶段（生理学层面）-&gt;传输阶段（声学层面）-&gt;接受阶段（生理学层面）-&gt;理解阶段（语言学层面） “发音-传递-感知”三阶段 语音学：发音语音学，声学语音学，感知语音学  语音产生数字模型H(z) &#x3D; U(z)V(z)R(z)U(z) &#x3D; G(z)E(z) 单位脉冲通过低通滤波器G的输出单位脉冲Z（激励模型）V(z)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数字音视频处理复习坑">
+<meta property="og:url" content="http://zjubank.com/2016/01/14/review-Voice-and-Video-Analysis/index.html">
+<meta property="og:site_name" content="音ノ木坂学院">
+<meta property="og:description" content="语音部分语音技术引言语音链 想说阶段（语言学层面）-&gt;说出阶段（生理学层面）-&gt;传输阶段（声学层面）-&gt;接受阶段（生理学层面）-&gt;理解阶段（语言学层面） “发音-传递-感知”三阶段 语音学：发音语音学，声学语音学，感知语音学  语音产生数字模型H(z) &#x3D; U(z)V(z)R(z)U(z) &#x3D; G(z)E(z) 单位脉冲通过低通滤波器G的输出单位脉冲Z（激励模型）V(z)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-01-13T19:53:22.000Z">
+<meta property="article:modified_time" content="2016-07-19T06:56:16.000Z">
+<meta property="article:author" content="ZJUBank">
+<meta property="article:tag" content="Review">
+<meta property="article:tag" content="数字音视频处理">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://zjubank.com/2016/01/14/review-Voice-and-Video-Analysis/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>数字音视频处理复习坑 | 音ノ木坂学院</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-70857825-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-70857825-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">音ノ木坂学院</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">叶え！みんなの夢――</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">43</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">41</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zjubank.com/2016/01/14/review-Voice-and-Video-Analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZJUBank">
+      <meta itemprop="description" content="「みんなで叶える物語」">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="音ノ木坂学院">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数字音视频处理复习坑
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-01-14 03:53:22" itemprop="dateCreated datePublished" datetime="2016-01-14T03:53:22+08:00">2016-01-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2016-07-19 14:56:16" itemprop="dateModified" datetime="2016-07-19T14:56:16+08:00">2016-07-19</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2016/01/14/review-Voice-and-Video-Analysis/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/01/14/review-Voice-and-Video-Analysis/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="语音部分"><a href="#语音部分" class="headerlink" title="语音部分"></a>语音部分</h2><h3 id="语音技术引言"><a href="#语音技术引言" class="headerlink" title="语音技术引言"></a>语音技术引言</h3><h4 id="语音链"><a href="#语音链" class="headerlink" title="语音链"></a>语音链</h4><ul>
+<li>想说阶段（语言学层面）-&gt;说出阶段（生理学层面）-&gt;传输阶段（声学层面）-&gt;接受阶段（生理学层面）-&gt;理解阶段（语言学层面）</li>
+<li>“发音-传递-感知”三阶段</li>
+<li>语音学：发音语音学，声学语音学，感知语音学</li>
+</ul>
+<h4 id="语音产生数字模型"><a href="#语音产生数字模型" class="headerlink" title="语音产生数字模型"></a>语音产生数字模型</h4><p>H(z) = U(z)V(z)R(z)<br>U(z) = G(z)E(z) 单位脉冲通过低通滤波器G的输出单位脉冲Z（激励模型）<br>V(z) 全极点模型（声道模型）<br>R(z) 高通滤波器（声道模型）</p>
+<h4 id="短时平稳假设（重点）"><a href="#短时平稳假设（重点）" class="headerlink" title="短时平稳假设（重点）"></a>短时平稳假设（重点）</h4><p>因为肌肉运动频率相对语音频率来说是缓慢的，所以在一个短时间范围内，其特性基本保持不变，即相对稳定，可以视作一个准稳态过程。基于这种考虑，对语音信号进行分段考虑，每一段称为一帧，一般假设为10~30ms</p>
+<a id="more"></a>
+
+<h3 id="语音分析"><a href="#语音分析" class="headerlink" title="语音分析"></a>语音分析</h3><h4 id="时域分析"><a href="#时域分析" class="headerlink" title="时域分析"></a>时域分析</h4><p><strong>特点</strong></p>
+<ul>
+<li>简单直观、清晰易懂、运算量小、物理意义明确。</li>
+<li>很难反映语音感知特性，且容易受环境变化影响</li>
+<li>主要参数为：音量，过零率，音高/基音周期（Pitch）</li>
+</ul>
+<p><strong>步骤</strong></p>
+<ol>
+<li>预处理</li>
+<li>音量</li>
+<li>过零率</li>
+<li>端点检测：<ul>
+<li>目标：检测语音开始和结束的位置</li>
+<li>两种检测错误：False Rejection, False Acceptance</li>
+</ul>
+</li>
+<li>基频</li>
+</ol>
+<h4 id="频域分析"><a href="#频域分析" class="headerlink" title="频域分析"></a>频域分析</h4><p><strong>特点</strong></p>
+<ul>
+<li>具有实际的物理意义和明显的声学特性，且不易受环境变化影响</li>
+<li>主要参数为：共振峰（Formant），音高/基音周期</li>
+<li>分析方法包括：滤波器组法，傅里叶变化法，线性预测分析法</li>
+<li>将语音的对数功率进行反傅里叶变换后得到，可以进一步将声道特性和激励特性有效分开，可以更好地揭示语音的本质特征。主要参数为：MFCC（梅尔倒谱系数）、LPCC（线性预测倒谱系数）</li>
+</ul>
+<p><strong>短时傅里叶分析（STFT）</strong><br>语图就是频谱</p>
+<p><strong>MFCC</strong></p>
+<ol>
+<li>对语音进行预加重、分帧和加窗；</li>
+<li>对每一个短时分析窗，通过FFT得到对应的频谱；</li>
+<li>将频谱通过Mel滤波器组得到Mel频谱；</li>
+<li>在Mel频谱上面进行倒谱分析（取对数、做逆变换（实际一般通过DCT，取DCT后第2个到第13个系数作为MFCC系数）），获得Mel频率倒谱系数MFCC，即为该帧的语音特征；</li>
+<li>得到一系列倒谱向量，每个向量就是每帧的MFCC特征向量。之后对语音分类型进行训练和识别。</li>
+</ol>
+<h3 id="语音识别"><a href="#语音识别" class="headerlink" title="语音识别"></a>语音识别</h3><h4 id="高斯混合模型GMM"><a href="#高斯混合模型GMM" class="headerlink" title="高斯混合模型GMM"></a>高斯混合模型GMM</h4><p><del>弃疗</del></p>
+<h4 id="说话人识别"><a href="#说话人识别" class="headerlink" title="说话人识别"></a>说话人识别</h4><p><del>弃疗</del></p>
+<h3 id="语音编码与合成"><a href="#语音编码与合成" class="headerlink" title="语音编码与合成"></a>语音编码与合成</h3><h4 id="三种编码方法与代表算法"><a href="#三种编码方法与代表算法" class="headerlink" title="三种编码方法与代表算法"></a>三种编码方法与代表算法</h4><ol>
+<li>波形编码<ul>
+<li>PCM<ul>
+<li>线性步长</li>
+<li>一般16位表示</li>
+<li>可以表示96以上的动态范围</li>
+<li>人耳几乎听不到噪音</li>
+</ul>
+</li>
+<li>DPCM：差分编码<ul>
+<li>利用时间轴上信号间的冗余</li>
+<li>两个x-位的样本的差比x位要小得多</li>
+<li>传输样本间的差分信号，而不是样本的值</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>参数编码<ul>
+<li>LPC-10<ul>
+<li>利用前n（此处为10）个信号值，来预测当前信号值，将声道抽象成一个全极点的传递函数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>混合编码<ul>
+<li>CELP：码激励线性预测编码<ul>
+<li>用线性预测提取声道参数，用一个包含许多典型的激励矢量的码本作为激励参数，每次编码时都在这个码本中搜索一个最佳的激励矢量，这个激励矢量的编码值就是这个序列的码本中的序号。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="音乐部分"><a href="#音乐部分" class="headerlink" title="音乐部分"></a>音乐部分</h2><h3 id="音乐基础"><a href="#音乐基础" class="headerlink" title="音乐基础"></a>音乐基础</h3><ul>
+<li>音乐的基本要素：音高、音强、音长、音色</li>
+<li>音乐的表示方式：乐谱</li>
+<li>计算机表示：乐谱版面描述语言 MuTeX、数字乐器接口 MIDI、音频信号表示 PCM/MP3</li>
+</ul>
+<h4 id="音乐合成"><a href="#音乐合成" class="headerlink" title="音乐合成"></a>音乐合成</h4><p><strong>制作流程</strong><br>作曲作词 -&gt; 编曲 -&gt; 录音 -&gt; 混音</p>
+<p><strong>主要技术</strong></p>
+<ul>
+<li>软件编辑：Overture、SONAR、Adobe Audition</li>
+<li>语言编程：基于Niquist的音乐合成、OpenAL、Matlab、Flash Action Script<ul>
+<li>Nyquist：基于Lisp；跨平台；设置播放音阶、调节音量、播放时间、声音叠加等</li>
+<li>OpenAL：跨平台；在来源物体、音效缓冲和收听者中编码；用于音乐制作，游戏电影音效等；初始化、载入wav、设置上述参数、播放音乐</li>
+<li>MATLAB：读取wav再播放</li>
+</ul>
+</li>
+</ul>
+<h3 id="音乐分析"><a href="#音乐分析" class="headerlink" title="音乐分析"></a>音乐分析</h3><ul>
+<li>音乐表现形式：节奏、旋律、和声</li>
+</ul>
+<h4 id="节奏识别"><a href="#节奏识别" class="headerlink" title="节奏识别"></a>节奏识别</h4><p><strong>分类</strong></p>
+<ul>
+<li>基于MIDI的节奏识别</li>
+<li>基于真实音频信号的节奏识别</li>
+</ul>
+<p><strong>操作</strong></p>
+<ul>
+<li>节奏识别框架：音频流输入、激励检测、基本周期分析、后处理</li>
+<li>节奏特征提取：时域分析和频域分析</li>
+</ul>
+<p><strong>发展方向</strong><br>交互、可视化</p>
+<h4 id="旋律识别"><a href="#旋律识别" class="headerlink" title="旋律识别"></a>旋律识别</h4><p>音准评分：旋律评分模块、抢拍与慢拍评分模块、节奏分析模块、演唱情绪分析模块、声音圆润饱满分析模块、语音识别模块</p>
+<h3 id="音乐检索"><a href="#音乐检索" class="headerlink" title="音乐检索"></a>音乐检索</h3><h4 id="乐纹样例检索"><a href="#乐纹样例检索" class="headerlink" title="乐纹样例检索"></a>乐纹样例检索</h4><ul>
+<li>乐纹：可以代表一段音乐重要声学特征的基于内容的紧致数字签名</li>
+<li>乐纹的主要特征<ul>
+<li>鲁棒性：经受严重的音频信号处理后仍可被识别出来</li>
+<li>区分性：不同歌曲之间差异较大，同一歌曲不同版本之间差异较小</li>
+</ul>
+</li>
+<li>乐纹提取：时域分析、频域分析</li>
+<li>乐纹索引：通过特征点对索引技术构建乐纹库</li>
+<li>乐纹查询：链表构建查询结构（PPT中为三重链表）</li>
+</ul>
+<h4 id="哼唱检索"><a href="#哼唱检索" class="headerlink" title="哼唱检索"></a>哼唱检索</h4><ul>
+<li>旋律表示：三层表示<ul>
+<li>对哼唱旋律进行基频提取，表示为基于帧的音高序列</li>
+<li>综合基频曲线、谐波和能量等信息，将基频序列切分成格式化的音符序列</li>
+<li>寻找旋律中的轮廓点，并试图确定数据库中的旋律乐句边界</li>
+<li><del>谁能告诉我Hexo的Markdown怎么加表格呀</del></li>
+<li>旋律表示 | 级别 | 元素 | 表示规模 |</li>
+<li>基频序列 | 声学层 | 帧 | 800~900 |</li>
+<li>音符序列 | 符号层 | 音符 | 20~40 |</li>
+<li>轮廓因子 | 乐句层 | 轮廓极值点 | 8~12 |</li>
+</ul>
+</li>
+<li>旋律特征提取：基频提取、音符切分、轮廓点提取等各级旋律提取结果</li>
+<li>旋律查询： 基于轮廓因子的快速检索</li>
+</ul>
+<hr>
+<h2 id="视频部分"><a href="#视频部分" class="headerlink" title="视频部分"></a>视频部分</h2><h3 id="视频压缩技术基础"><a href="#视频压缩技术基础" class="headerlink" title="视频压缩技术基础"></a>视频压缩技术基础</h3><h4 id="颜色"><a href="#颜色" class="headerlink" title="颜色"></a>颜色</h4><ul>
+<li>人眼对明度变化最敏感，对颜色变化次之</li>
+<li>RGB编码含大量无用信息，采用YUV（明度和色度）更好，因为UV的数据量只有Y的1/4（1.00 0.25 0.25）</li>
+</ul>
+<h4 id="有损压缩基本思想"><a href="#有损压缩基本思想" class="headerlink" title="有损压缩基本思想"></a>有损压缩基本思想</h4><ul>
+<li>向量编码效率高于独立标量编码</li>
+<li>一组时序信号的相邻信号之间存在相关性，如果能对其线性变换，使得变换后的结果相关性更小，则编码效率提高</li>
+<li>DCT是常用方法，能够有效降低向量中各分量之间的相关性</li>
+</ul>
+<h4 id="DCT"><a href="#DCT" class="headerlink" title="DCT"></a>DCT</h4><ul>
+<li>1D和2D公式见PPT</li>
+<li>可以用于去噪或有损压缩</li>
+</ul>
+<h3 id="视频压缩技术"><a href="#视频压缩技术" class="headerlink" title="视频压缩技术"></a>视频压缩技术</h3><p><del>英语不好乱翻的</del></p>
+<h4 id="基于动作补偿的压缩"><a href="#基于动作补偿的压缩" class="headerlink" title="基于动作补偿的压缩"></a>基于动作补偿的压缩</h4><ol>
+<li>时间冗余<ul>
+<li>连续动作的图片中存在空间和时间的冗余</li>
+<li>I帧：帧内压缩，方法类似JPGE</li>
+<li>P帧和B帧：使用动作估计和动作补偿。P帧只用到之前的关键帧，而B帧要用到前后关键帧，压缩率更高。</li>
+</ul>
+</li>
+<li>动作补偿<ol>
+<li>首帧作为参考帧，当前帧是目标帧</li>
+<li>寻找目标帧和参考帧中最相近的macroblock</li>
+<li>使用动作向量MV替换</li>
+</ol>
+</li>
+</ol>
+<h4 id="运动向量搜索"><a href="#运动向量搜索" class="headerlink" title="运动向量搜索"></a>运动向量搜索</h4><ol>
+<li>匹配标准<ul>
+<li>MV搜索本质是一个匹配问题</li>
+<li>i,j∈[-p,p]，则搜索范围是(2p+1) * (2p+1)</li>
+<li>目标是找到让两个块之间距离最小的(i.j)</li>
+</ul>
+</li>
+<li>顺序搜索<ul>
+<li>复杂度太高：O(p^2N^2)</li>
+</ul>
+</li>
+<li>2D对数搜索<ul>
+<li>次优方法</li>
+<li>沿着最小失真方向搜索，每次移动检查5个搜索点，如果最小失真在中央或者边界，就减少搜索点之间的距离</li>
+</ul>
+</li>
+<li>分层搜索<ul>
+<li>3-lever Hierarchical search似乎是最优</li>
+</ul>
+</li>
+<li>其他方法<ul>
+<li>MV的搜索是视频压缩的关键步骤</li>
+</ul>
+</li>
+</ol>
+<h4 id="H-261"><a href="#H-261" class="headerlink" title="H.261"></a>H.261</h4><p><strong>概述</strong></p>
+<ul>
+<li>包含I帧和P帧</li>
+<li>I帧是独立图像（Inter-Frame）</li>
+<li>P帧从前一个P帧或I帧预测而来</li>
+<li>P帧包含了时间冗余去除，而I帧只包括空间冗余去除</li>
+<li>为了避免编码错误，视频每秒都会出现数次I帧</li>
+</ul>
+<p><strong>编码方式</strong></p>
+<ol>
+<li>Y通道分成16 * 16的块，Cb和Cr分成8 * 8的块。</li>
+<li>对每一个8 * 8的块使用DCT、量化、锯齿扫描、熵编码</li>
+<li>对目标帧里的所有小块，用上述搜索方式生成MV</li>
+<li>生成预测后，产生一个差别块用来测量预测错误</li>
+<li>对每个8 * 8的块都使用DCT、量化、锯齿扫描和熵编码</li>
+<li>如果找不到好的匹配，则这一帧会编码成I帧？</li>
+</ol>
+<h4 id="MPEG-1"><a href="#MPEG-1" class="headerlink" title="MPEG-1"></a>MPEG-1</h4><ul>
+<li>使用I、P、B帧</li>
+<li>View: I BBP BBP BBI</li>
+<li>Encode: I PBB PBB IBB</li>
+</ul>
+<h4 id="MPEG-2"><a href="#MPEG-2" class="headerlink" title="MPEG-2"></a>MPEG-2</h4><ul>
+<li>隔行扫描</li>
+<li>分层编码</li>
+<li>非线性量化</li>
+</ul>
+<h4 id="MPEG-4"><a href="#MPEG-4" class="headerlink" title="MPEG-4"></a>MPEG-4</h4><ul>
+<li>基于对象的编码</li>
+</ul>
+<h3 id="视频镜头检测及关键帧提取"><a href="#视频镜头检测及关键帧提取" class="headerlink" title="视频镜头检测及关键帧提取"></a>视频镜头检测及关键帧提取</h3><h4 id="视频结构化"><a href="#视频结构化" class="headerlink" title="视频结构化"></a>视频结构化</h4><ol>
+<li>帧：视频流中的基本组成单元，<ul>
+<li>每一帧均可看做一个独立图像</li>
+<li>视频流数据就是由连续图像帧构成的</li>
+</ul>
+</li>
+<li>镜头：摄像机拍下的不间断帧序列，是视频数据流进一步结构化的基础结构层<ul>
+<li>镜头是对视频流进行处理的最小物理单元，视频帧是视频流的基本单元，干改了少许的语义内容</li>
+<li>同一组镜头中的图像帧之间的特征保持稳定，因此如果相邻图像帧之间的特征发生了明显变化则认为发生了镜头变化，需要对视频数据切分</li>
+</ul>
+</li>
+<li>关键帧：可以代表镜头内容的图像<ul>
+<li>切分出镜头后，关键帧用来代表各镜头的特征，进行进一步的结构化</li>
+<li>关键帧数目一般远小于镜头包含的图像帧数目。短视频最简单的提取方法就是镜头的第一帧和最后一帧</li>
+</ul>
+</li>
+<li>场景：语义上相关和时间上相邻的若干镜头组成一个场景。场景是视频所蕴含的高层抽象概念和语义的表达。<ul>
+<li>由于镜头是由关键帧组成的，所以场景可以使用属于这个场景的若干镜头所对应的关键帧来表示</li>
+</ul>
+</li>
+<li>组：介于物理镜头和语义场景之间的结构</li>
+</ol>
+<h4 id="视频特征"><a href="#视频特征" class="headerlink" title="视频特征"></a>视频特征</h4><ol>
+<li>之前介绍的图像特征都是静态特征</li>
+<li>相邻视频帧特征将剑，就是特征一阶差分，体现了视频的动态变化</li>
+</ol>
+<h4 id="镜头边缘检测算法"><a href="#镜头边缘检测算法" class="headerlink" title="镜头边缘检测算法"></a>镜头边缘检测算法</h4><ol>
+<li>绝对帧间差法：见实验</li>
+<li>图像像素差法：先统计两幅图像对应响度变化超过阈值的像素点的个数，将变化的像素点个数与第二个预定的阈值比较，如果超过范围则认为镜头边界</li>
+<li>图像数值差法：比较相邻图像帧中所有对应像素点的特征差别，分成若干个子块区域，在这些区域中分别比较对应像素的差别</li>
+<li>颜色直方图法：用直方图的交</li>
+<li>双阈值法</li>
+</ol>
+<h4 id="渐变镜头的数学模型"><a href="#渐变镜头的数学模型" class="headerlink" title="渐变镜头的数学模型"></a>渐变镜头的数学模型</h4><p>推导镜头渐变过程中视频帧灰度均值或方差的公式并说明其特点，给出利用这些特点进行渐变镜头检测的思路</p>
+<h4 id="关键帧提取算法"><a href="#关键帧提取算法" class="headerlink" title="关键帧提取算法"></a>关键帧提取算法</h4><ol>
+<li>基于镜头边界法：切分得到镜头中的第一幅图像和最后一幅图像作为镜头关键帧</li>
+<li>基于颜色特征法：当前帧与最后一个关键帧比较，如果有较多特征发证改变，则为新关键帧</li>
+<li>基于运动分析法：摄像机运动造成的显著运动，分为焦距变化和角度变化</li>
+<li>基于聚类的关键帧提取（掌握概念即可）：一般用k-means</li>
+</ol>
+<h4 id="镜头的时间特征"><a href="#镜头的时间特征" class="headerlink" title="镜头的时间特征"></a>镜头的时间特征</h4><h4 id="镜头的空间特征"><a href="#镜头的空间特征" class="headerlink" title="镜头的空间特征"></a>镜头的空间特征</h4><h3 id="视频结构化-1"><a href="#视频结构化-1" class="headerlink" title="视频结构化"></a>视频结构化</h3><h4 id="视频目录生成构造的主要步骤"><a href="#视频目录生成构造的主要步骤" class="headerlink" title="视频目录生成构造的主要步骤"></a>视频目录生成构造的主要步骤</h4><ol>
+<li>镜头边缘检测</li>
+<li>关键帧提取</li>
+<li>时空特征提取</li>
+<li>时间可适性成组</li>
+<li>场景结构构造</li>
+</ol>
+<h4 id="视频时序结构图构造的主要步骤"><a href="#视频时序结构图构造的主要步骤" class="headerlink" title="视频时序结构图构造的主要步骤"></a>视频时序结构图构造的主要步骤</h4><ol>
+<li>视频解码</li>
+<li>视频切分</li>
+<li>关键帧提取</li>
+<li>视频聚类分析</li>
+<li>构造时序图</li>
+<li>按照时序图浏览</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Review/" rel="tag"># Review</a>
+              <a href="/tags/%E6%95%B0%E5%AD%97%E9%9F%B3%E8%A7%86%E9%A2%91%E5%A4%84%E7%90%86/" rel="tag"># 数字音视频处理</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/01/14/review-Image-Analysis/" rel="prev" title="图像信息处理复习坑">
+      <i class="fa fa-chevron-left"></i> 图像信息处理复习坑
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/01/14/review-CV/" rel="next" title="计算机视觉复习坑">
+      计算机视觉复习坑 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E9%9F%B3%E9%83%A8%E5%88%86"><span class="nav-number">1.</span> <span class="nav-text">语音部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E9%9F%B3%E6%8A%80%E6%9C%AF%E5%BC%95%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">语音技术引言</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%AD%E9%9F%B3%E9%93%BE"><span class="nav-number">1.1.1.</span> <span class="nav-text">语音链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%AD%E9%9F%B3%E4%BA%A7%E7%94%9F%E6%95%B0%E5%AD%97%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.2.</span> <span class="nav-text">语音产生数字模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9F%AD%E6%97%B6%E5%B9%B3%E7%A8%B3%E5%81%87%E8%AE%BE%EF%BC%88%E9%87%8D%E7%82%B9%EF%BC%89"><span class="nav-number">1.1.3.</span> <span class="nav-text">短时平稳假设（重点）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E9%9F%B3%E5%88%86%E6%9E%90"><span class="nav-number">1.2.</span> <span class="nav-text">语音分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%B6%E5%9F%9F%E5%88%86%E6%9E%90"><span class="nav-number">1.2.1.</span> <span class="nav-text">时域分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%91%E5%9F%9F%E5%88%86%E6%9E%90"><span class="nav-number">1.2.2.</span> <span class="nav-text">频域分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB"><span class="nav-number">1.3.</span> <span class="nav-text">语音识别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E6%96%AF%E6%B7%B7%E5%90%88%E6%A8%A1%E5%9E%8BGMM"><span class="nav-number">1.3.1.</span> <span class="nav-text">高斯混合模型GMM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%B4%E8%AF%9D%E4%BA%BA%E8%AF%86%E5%88%AB"><span class="nav-number">1.3.2.</span> <span class="nav-text">说话人识别</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E9%9F%B3%E7%BC%96%E7%A0%81%E4%B8%8E%E5%90%88%E6%88%90"><span class="nav-number">1.4.</span> <span class="nav-text">语音编码与合成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E7%BC%96%E7%A0%81%E6%96%B9%E6%B3%95%E4%B8%8E%E4%BB%A3%E8%A1%A8%E7%AE%97%E6%B3%95"><span class="nav-number">1.4.1.</span> <span class="nav-text">三种编码方法与代表算法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9F%B3%E4%B9%90%E9%83%A8%E5%88%86"><span class="nav-number">2.</span> <span class="nav-text">音乐部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9F%B3%E4%B9%90%E5%9F%BA%E7%A1%80"><span class="nav-number">2.1.</span> <span class="nav-text">音乐基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9F%B3%E4%B9%90%E5%90%88%E6%88%90"><span class="nav-number">2.1.1.</span> <span class="nav-text">音乐合成</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9F%B3%E4%B9%90%E5%88%86%E6%9E%90"><span class="nav-number">2.2.</span> <span class="nav-text">音乐分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8A%82%E5%A5%8F%E8%AF%86%E5%88%AB"><span class="nav-number">2.2.1.</span> <span class="nav-text">节奏识别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%8B%E5%BE%8B%E8%AF%86%E5%88%AB"><span class="nav-number">2.2.2.</span> <span class="nav-text">旋律识别</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9F%B3%E4%B9%90%E6%A3%80%E7%B4%A2"><span class="nav-number">2.3.</span> <span class="nav-text">音乐检索</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B9%90%E7%BA%B9%E6%A0%B7%E4%BE%8B%E6%A3%80%E7%B4%A2"><span class="nav-number">2.3.1.</span> <span class="nav-text">乐纹样例检索</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%93%BC%E5%94%B1%E6%A3%80%E7%B4%A2"><span class="nav-number">2.3.2.</span> <span class="nav-text">哼唱检索</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E9%83%A8%E5%88%86"><span class="nav-number">3.</span> <span class="nav-text">视频部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF%E5%9F%BA%E7%A1%80"><span class="nav-number">3.1.</span> <span class="nav-text">视频压缩技术基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%9C%E8%89%B2"><span class="nav-number">3.1.1.</span> <span class="nav-text">颜色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%89%E6%8D%9F%E5%8E%8B%E7%BC%A9%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="nav-number">3.1.2.</span> <span class="nav-text">有损压缩基本思想</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DCT"><span class="nav-number">3.1.3.</span> <span class="nav-text">DCT</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF"><span class="nav-number">3.2.</span> <span class="nav-text">视频压缩技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%8A%A8%E4%BD%9C%E8%A1%A5%E5%81%BF%E7%9A%84%E5%8E%8B%E7%BC%A9"><span class="nav-number">3.2.1.</span> <span class="nav-text">基于动作补偿的压缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E5%8A%A8%E5%90%91%E9%87%8F%E6%90%9C%E7%B4%A2"><span class="nav-number">3.2.2.</span> <span class="nav-text">运动向量搜索</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#H-261"><span class="nav-number">3.2.3.</span> <span class="nav-text">H.261</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MPEG-1"><span class="nav-number">3.2.4.</span> <span class="nav-text">MPEG-1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MPEG-2"><span class="nav-number">3.2.5.</span> <span class="nav-text">MPEG-2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MPEG-4"><span class="nav-number">3.2.6.</span> <span class="nav-text">MPEG-4</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E9%95%9C%E5%A4%B4%E6%A3%80%E6%B5%8B%E5%8F%8A%E5%85%B3%E9%94%AE%E5%B8%A7%E6%8F%90%E5%8F%96"><span class="nav-number">3.3.</span> <span class="nav-text">视频镜头检测及关键帧提取</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E7%BB%93%E6%9E%84%E5%8C%96"><span class="nav-number">3.3.1.</span> <span class="nav-text">视频结构化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E7%89%B9%E5%BE%81"><span class="nav-number">3.3.2.</span> <span class="nav-text">视频特征</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%95%9C%E5%A4%B4%E8%BE%B9%E7%BC%98%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95"><span class="nav-number">3.3.3.</span> <span class="nav-text">镜头边缘检测算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B8%90%E5%8F%98%E9%95%9C%E5%A4%B4%E7%9A%84%E6%95%B0%E5%AD%A6%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.3.4.</span> <span class="nav-text">渐变镜头的数学模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%B8%A7%E6%8F%90%E5%8F%96%E7%AE%97%E6%B3%95"><span class="nav-number">3.3.5.</span> <span class="nav-text">关键帧提取算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%95%9C%E5%A4%B4%E7%9A%84%E6%97%B6%E9%97%B4%E7%89%B9%E5%BE%81"><span class="nav-number">3.3.6.</span> <span class="nav-text">镜头的时间特征</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%95%9C%E5%A4%B4%E7%9A%84%E7%A9%BA%E9%97%B4%E7%89%B9%E5%BE%81"><span class="nav-number">3.3.7.</span> <span class="nav-text">镜头的空间特征</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E7%BB%93%E6%9E%84%E5%8C%96-1"><span class="nav-number">3.4.</span> <span class="nav-text">视频结构化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E7%9B%AE%E5%BD%95%E7%94%9F%E6%88%90%E6%9E%84%E9%80%A0%E7%9A%84%E4%B8%BB%E8%A6%81%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.4.1.</span> <span class="nav-text">视频目录生成构造的主要步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E6%97%B6%E5%BA%8F%E7%BB%93%E6%9E%84%E5%9B%BE%E6%9E%84%E9%80%A0%E7%9A%84%E4%B8%BB%E8%A6%81%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.4.2.</span> <span class="nav-text">视频时序结构图构造的主要步骤</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ZJUBank"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZJUBank</p>
+  <div class="site-description" itemprop="description">「みんなで叶える物語」</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjubank" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjubank" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZJUBank</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://zjubank.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://zjubank.com/2016/01/14/review-Voice-and-Video-Analysis/";
+    this.page.identifier = "2016/01/14/review-Voice-and-Video-Analysis/";
+    this.page.title = "数字音视频处理复习坑";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://zjubank.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

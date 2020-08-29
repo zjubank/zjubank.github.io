@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="FDdrJxNJ7ZlaHtxMG0bqn8O4IY-B35_4cjHcxcdzP6A">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjubank.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="假装自己基础知识都会，结果发现还是要先补…… 二进制数据bit是最小的单位； 最右边一位编号为0，叫最低位&#x2F;LSB；最左一位是最高位&#x2F;MSB。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="x86汇编急救指南：二进制数据和寄存器">
+<meta property="og:url" content="http://zjubank.com/2015/07/04/review-x86-assembly-00/index.html">
+<meta property="og:site_name" content="音ノ木坂学院">
+<meta property="og:description" content="假装自己基础知识都会，结果发现还是要先补…… 二进制数据bit是最小的单位； 最右边一位编号为0，叫最低位&#x2F;LSB；最左一位是最高位&#x2F;MSB。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2015-07-04T13:09:44.000Z">
+<meta property="article:modified_time" content="2016-07-19T06:57:59.000Z">
+<meta property="article:author" content="ZJUBank">
+<meta property="article:tag" content="Review">
+<meta property="article:tag" content="Assembly">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://zjubank.com/2015/07/04/review-x86-assembly-00/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>x86汇编急救指南：二进制数据和寄存器 | 音ノ木坂学院</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-70857825-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-70857825-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">音ノ木坂学院</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">叶え！みんなの夢――</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">43</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">41</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zjubank.com/2015/07/04/review-x86-assembly-00/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZJUBank">
+      <meta itemprop="description" content="「みんなで叶える物語」">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="音ノ木坂学院">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          x86汇编急救指南：二进制数据和寄存器
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2015-07-04 21:09:44" itemprop="dateCreated datePublished" datetime="2015-07-04T21:09:44+08:00">2015-07-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2016-07-19 14:57:59" itemprop="dateModified" datetime="2016-07-19T14:57:59+08:00">2016-07-19</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2015/07/04/review-x86-assembly-00/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/04/review-x86-assembly-00/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>假装自己基础知识都会，结果发现还是要先补……</p>
+<h2 id="二进制数据"><a href="#二进制数据" class="headerlink" title="二进制数据"></a>二进制数据</h2><h3 id="bit"><a href="#bit" class="headerlink" title="bit"></a>bit</h3><p>是最小的单位；</p>
+<p>最右边一位编号为0，叫最低位/LSB；最左一位是最高位/MSB。</p>
+<a id="more"></a>
+
+<h3 id="nibble"><a href="#nibble" class="headerlink" title="nibble"></a>nibble</h3><p>1 nibble = 4 bits  eg. 1001</p>
+<p>用于16进制数处理，因为1H = 0001B；</p>
+<p>用于BCD码处理。</p>
+<h3 id="byte"><a href="#byte" class="headerlink" title="byte"></a>byte</h3><p>1 byte = 8 bits (= 2 nibbles)  eg. 1001</p>
+<p>是8086的最小可寻址单元，主存按byte编址；</p>
+<p>可以存放0-255的unsigned或-128-127的signed；</p>
+<p>还用来存放字符。</p>
+<h3 id="word"><a href="#word" class="headerlink" title="word"></a>word</h3><p>1 word = 16 bits = 2 bytes</p>
+<p>0-7位：低字节 Low Order Byte；8-15位：高字节 High Order Byte；</p>
+<p>8086中内存段地址和偏移地址都是word。</p>
+<h3 id="double-word"><a href="#double-word" class="headerlink" title="double word"></a>double word</h3><p>1 double word = 32 bits = 2 words = 4 bytes</p>
+<p>0-7位：低字 Low Order Word；8-15位：高字 High Order Word。</p>
+<p>&nbsp;</p>
+<h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>8086有14个16bits寄存器。分为：8个通用寄存器，4个段寄存器，2个控制类寄存器。</p>
+<h3 id="通用寄存器"><a href="#通用寄存器" class="headerlink" title="通用寄存器"></a>通用寄存器</h3><h4 id="数据寄存器-AX-BX-CX-DX"><a href="#数据寄存器-AX-BX-CX-DX" class="headerlink" title="数据寄存器 AX, BX, CX, DX"></a>数据寄存器 AX, BX, CX, DX</h4><p>每一个寄存器XX分为高低XH, XL两个。</p>
+<h5 id="AX"><a href="#AX" class="headerlink" title="AX:"></a>AX:</h5><p>Accumulator 累加器</p>
+<p>乘除法运算、串运算、I/O指令中作为专用寄存器</p>
+<h5 id="BX"><a href="#BX" class="headerlink" title="BX:"></a>BX:</h5><p>Base 基址寄存器</p>
+<p>寻址时存放基址</p>
+<h5 id="CX"><a href="#CX" class="headerlink" title="CX:"></a>CX:</h5><p>Count 计数寄存器</p>
+<p>循环、串操作指令中用作计数器</p>
+<h5 id="DX"><a href="#DX" class="headerlink" title="DX:"></a>DX:</h5><p>Data 数据寄存器</p>
+<p>寄存器间接寻址的I/O指令中存放I/O端口地址；</p>
+<p>双字长除法运算时和AX存放一个双字长数据，DX存高位。</p>
+<h4 id="变址寄存器-SI-DI"><a href="#变址寄存器-SI-DI" class="headerlink" title="变址寄存器 SI, DI"></a>变址寄存器 SI, DI</h4><p>除做通用寄存器外，常常用来寻址</p>
+<h5 id="SI"><a href="#SI" class="headerlink" title="SI:"></a>SI:</h5><p>Source Index 源变址寄存器</p>
+<h5 id="DI"><a href="#DI" class="headerlink" title="DI:"></a>DI:</h5><p>Destination 目的变址寄存器</p>
+<h4 id="地址指针寄存器-SP-BP"><a href="#地址指针寄存器-SP-BP" class="headerlink" title="地址指针寄存器 SP, BP"></a>地址指针寄存器 SP, BP</h4><p>存放数据，更多存放内存单元的偏移地址</p>
+<h5 id="SP"><a href="#SP" class="headerlink" title="SP:"></a>SP:</h5><p>Stack Pointer 堆栈指针寄存器</p>
+<p>堆栈的<strong>栈顶</strong>内存单元的偏移地址</p>
+<p>除了堆栈操作外不应改变SP的地址</p>
+<h5 id="BP"><a href="#BP" class="headerlink" title="BP:"></a>BP:</h5><p>Base Pointer 基址指针寄存器</p>
+<p>做通用寄存器、寻址</p>
+<h3 id="一点说明"><a href="#一点说明" class="headerlink" title="一点说明"></a>一点说明</h3><p>只有BX, BP, SI, DI可以用在方括号[]中来寻址</p>
+<p>缺省地址：如果方括号中有bp，段地址就是ss；如果没有bp，一律是DS</p>
+<h3 id="段寄存器-CS-SS-DS-ES"><a href="#段寄存器-CS-SS-DS-ES" class="headerlink" title="段寄存器 CS, SS, DS, ES"></a>段寄存器 CS, SS, DS, ES</h3><h5 id="CS"><a href="#CS" class="headerlink" title="CS:"></a>CS:</h5><p>Code Segment 代码段寄存器</p>
+<p>存放代码段的段地址</p>
+<h5 id="SS"><a href="#SS" class="headerlink" title="SS:"></a>SS:</h5><p>Stack Segment 堆栈段寄存器</p>
+<p>存放堆栈段的段地址</p>
+<h5 id="DS"><a href="#DS" class="headerlink" title="DS:"></a>DS:</h5><p>Data Segment 数据段寄存器</p>
+<p>存放数据段的段地址</p>
+<h5 id="ES"><a href="#ES" class="headerlink" title="ES:"></a>ES:</h5><p>Extra Segment 附加数据段寄存器</p>
+<p>存放附加段的段地址</p>
+<h3 id="控制寄存器-IP-FL"><a href="#控制寄存器-IP-FL" class="headerlink" title="控制寄存器 IP, FL"></a>控制寄存器 IP, FL</h3><h5 id="IP"><a href="#IP" class="headerlink" title="IP:"></a>IP:</h5><p>Instruction Pointer 指令指针寄存器</p>
+<p>存放<strong>代码段</strong>中的<strong>偏移地址</strong></p>
+<p>程序运行过程中， CS:IP始终指向下一条指令的首字节；CS是段地址， IP是偏移地址</p>
+<p>用户程序不能直接访问IP</p>
+<h5 id="FL"><a href="#FL" class="headerlink" title="FL:"></a>FL:</h5><p>Flags 标志寄存器</p>
+<p>16位寄存器，但只用其中9位（只考6个常用的：CF, ZF, OF, SF, DF, IF）</p>
+<p>OF:</p>
+<p>Overflow Flag 溢出标志</p>
+<p>运算溢出置1， 否则置0；</p>
+<p>JO：OF=1跳；JNO：OF=0跳；</p>
+<p>非符号数运算不用考虑OF。</p>
+<p>SF:</p>
+<p>Sign Flag 符号标志</p>
+<p>记录运算的符号，负数置1，否则置0；</p>
+<p>JS：SF=1跳；JNS：SF=0跳；</p>
+<p>仅对符号数有意义。</p>
+<p>ZF:</p>
+<p>Zero Flag 零标志</p>
+<p>运算结果为零置1，否则置0；</p>
+<p>JZ/JNZ.</p>
+<p>CF:</p>
+<p>Carry Flag 进位标志</p>
+<p>运算时从最高位产生的进位值或借位值；</p>
+<p>有进位/借位置1， 否则置0；</p>
+<p>JC/JNC；</p>
+<p>CLC：置0，STC：置1，CMC：反转CF；</p>
+<p>仅对<strong>非符号数</strong>有意义。</p>
+<p>DF:</p>
+<p>Direction Flag 方向标志</p>
+<p>DF=1时每次操作后SI和DI减量，使串处理从高地址向低地址方向进行；DF=0相反；</p>
+<p>CLD：置0，STD：置1.</p>
+<p>IF:</p>
+<p>Interrupt Flag 中断标志</p>
+<p>IF=1允许中断，IF=0关闭中断；</p>
+<p>CLI：置0，STI：置1.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Review/" rel="tag"># Review</a>
+              <a href="/tags/Assembly/" rel="tag"># Assembly</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2015/07/04/review-x86-assembly-01/" rel="prev" title="x86汇编急救指南：指令集">
+      <i class="fa fa-chevron-left"></i> x86汇编急救指南：指令集
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2015/12/01/hexo-blog/" rel="next" title="Hexo搭建，Wordpress迁移和Github部署(更新第三方插件)">
+      Hexo搭建，Wordpress迁移和Github部署(更新第三方插件) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">二进制数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bit"><span class="nav-number">1.1.</span> <span class="nav-text">bit</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nibble"><span class="nav-number">1.2.</span> <span class="nav-text">nibble</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#byte"><span class="nav-number">1.3.</span> <span class="nav-text">byte</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#word"><span class="nav-number">1.4.</span> <span class="nav-text">word</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#double-word"><span class="nav-number">1.5.</span> <span class="nav-text">double word</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">通用寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AF%84%E5%AD%98%E5%99%A8-AX-BX-CX-DX"><span class="nav-number">2.1.1.</span> <span class="nav-text">数据寄存器 AX, BX, CX, DX</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#AX"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">AX:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#BX"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">BX:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CX"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">CX:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#DX"><span class="nav-number">2.1.1.4.</span> <span class="nav-text">DX:</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%98%E5%9D%80%E5%AF%84%E5%AD%98%E5%99%A8-SI-DI"><span class="nav-number">2.1.2.</span> <span class="nav-text">变址寄存器 SI, DI</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SI"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">SI:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#DI"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">DI:</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%B0%E5%9D%80%E6%8C%87%E9%92%88%E5%AF%84%E5%AD%98%E5%99%A8-SP-BP"><span class="nav-number">2.1.3.</span> <span class="nav-text">地址指针寄存器 SP, BP</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SP"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">SP:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#BP"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">BP:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E7%82%B9%E8%AF%B4%E6%98%8E"><span class="nav-number">2.2.</span> <span class="nav-text">一点说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8-CS-SS-DS-ES"><span class="nav-number">2.3.</span> <span class="nav-text">段寄存器 CS, SS, DS, ES</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#CS"><span class="nav-number">2.3.0.1.</span> <span class="nav-text">CS:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#SS"><span class="nav-number">2.3.0.2.</span> <span class="nav-text">SS:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#DS"><span class="nav-number">2.3.0.3.</span> <span class="nav-text">DS:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ES"><span class="nav-number">2.3.0.4.</span> <span class="nav-text">ES:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8-IP-FL"><span class="nav-number">2.4.</span> <span class="nav-text">控制寄存器 IP, FL</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#IP"><span class="nav-number">2.4.0.1.</span> <span class="nav-text">IP:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#FL"><span class="nav-number">2.4.0.2.</span> <span class="nav-text">FL:</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ZJUBank"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZJUBank</p>
+  <div class="site-description" itemprop="description">「みんなで叶える物語」</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjubank" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjubank" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZJUBank</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://zjubank.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://zjubank.com/2015/07/04/review-x86-assembly-00/";
+    this.page.identifier = "2015/07/04/review-x86-assembly-00/";
+    this.page.title = "x86汇编急救指南：二进制数据和寄存器";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://zjubank.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

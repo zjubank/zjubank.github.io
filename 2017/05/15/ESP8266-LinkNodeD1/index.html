@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="FDdrJxNJ7ZlaHtxMG0bqn8O4IY-B35_4cjHcxcdzP6A">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjubank.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文原文发表在《无线电》上，感谢fm老师提供开发板和指导  LinkNode D1 简介LinkNode D1是LinkSprite公司出品的一款Arduino兼容的WiFi开发板。ESP-8266EX 使用 Tensilica L106 32 bit 为MCU，这款MCU主要特点有：  支持802.11 b&#x2F;g&#x2F;n标准 支持WPA&#x2F;WPA2 支持STA&#x2F;AP&#x2F;STA+AP 三种工作模式 唤醒到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LinkNode D1 评测与使用">
+<meta property="og:url" content="http://zjubank.com/2017/05/15/ESP8266-LinkNodeD1/index.html">
+<meta property="og:site_name" content="音ノ木坂学院">
+<meta property="og:description" content="本文原文发表在《无线电》上，感谢fm老师提供开发板和指导  LinkNode D1 简介LinkNode D1是LinkSprite公司出品的一款Arduino兼容的WiFi开发板。ESP-8266EX 使用 Tensilica L106 32 bit 为MCU，这款MCU主要特点有：  支持802.11 b&#x2F;g&#x2F;n标准 支持WPA&#x2F;WPA2 支持STA&#x2F;AP&#x2F;STA+AP 三种工作模式 唤醒到">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://zjubank.com/uploads/ESP8266-LinkNodeD1/Arduino-Setting.png">
+<meta property="og:image" content="http://zjubank.com/uploads/ESP8266-LinkNodeD1/Board-Manager.png">
+<meta property="og:image" content="http://zjubank.com/uploads/ESP8266-LinkNodeD1/Library-Manager.png">
+<meta property="og:image" content="http://zjubank.com/uploads/ESP8266-LinkNodeD1/Board-Setting.png">
+<meta property="og:image" content="http://zjubank.com/uploads/ESP8266-LinkNodeD1/LinkNodeAP-WiFiManager.png">
+<meta property="og:image" content="http://zjubank.com/uploads/ESP8266-LinkNodeD1/Arduino-WiFi.png">
+<meta property="og:image" content="http://zjubank.com/uploads/ESP8266-LinkNodeD1/Lua-Upload.png">
+<meta property="og:image" content="http://zjubank.com/uploads/ESP8266-LinkNodeD1/NodeMCU-WiFi.png">
+<meta property="article:published_time" content="2017-05-15T02:13:10.000Z">
+<meta property="article:modified_time" content="2017-06-08T12:35:07.000Z">
+<meta property="article:author" content="ZJUBank">
+<meta property="article:tag" content="ESP8266">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://zjubank.com/uploads/ESP8266-LinkNodeD1/Arduino-Setting.png">
+
+<link rel="canonical" href="http://zjubank.com/2017/05/15/ESP8266-LinkNodeD1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LinkNode D1 评测与使用 | 音ノ木坂学院</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-70857825-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-70857825-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">音ノ木坂学院</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">叶え！みんなの夢――</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">43</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">41</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zjubank.com/2017/05/15/ESP8266-LinkNodeD1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZJUBank">
+      <meta itemprop="description" content="「みんなで叶える物語」">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="音ノ木坂学院">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LinkNode D1 评测与使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-05-15 10:13:10" itemprop="dateCreated datePublished" datetime="2017-05-15T10:13:10+08:00">2017-05-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2017-06-08 20:35:07" itemprop="dateModified" datetime="2017-06-08T20:35:07+08:00">2017-06-08</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2017/05/15/ESP8266-LinkNodeD1/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/05/15/ESP8266-LinkNodeD1/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>本文原文发表在《无线电》上，感谢fm老师提供开发板和指导</p>
+</blockquote>
+<h2 id="LinkNode-D1-简介"><a href="#LinkNode-D1-简介" class="headerlink" title="LinkNode D1 简介"></a>LinkNode D1 简介</h2><p>LinkNode D1是LinkSprite公司出品的一款Arduino兼容的WiFi开发板。ESP-8266EX 使用 Tensilica L106 32 bit 为MCU，这款MCU主要特点有：</p>
+<ul>
+<li>支持802.11 b/g/n标准</li>
+<li>支持WPA/WPA2</li>
+<li>支持STA/AP/STA+AP 三种工作模式</li>
+<li>唤醒到开始传输数据时间小于2 ms</li>
+<li>待机功率小于1.0 mW</li>
+</ul>
+<p>这些特性使得LinkNode D1可以以低功耗模式、在多种WiFi环境下运行。此外，LinkNode D1的开发板还在此基础上扩展了以下功能：</p>
+<ul>
+<li>11个数字IO口</li>
+<li>1个模拟输入口</li>
+<li>1个Micro USB口用于供电和UART数据传输</li>
+<li>1个9~24V供电口</li>
+<li>4M Flash</li>
+<li>80K 内存</li>
+</ul>
+<p>这使得LinkNode D1可以连接更多的传感器等元件，也可以支持更复杂的代码。<br>LinkNode D1的串口转USB使用的是CH340，它提供了Windows、Mac和Linux的驱动，使得这款LinkNode D1可以在多平台上进行开发。</p>
+<a id="more"></a>
+
+<h2 id="使用Arduino模式开发"><a href="#使用Arduino模式开发" class="headerlink" title="使用Arduino模式开发"></a>使用Arduino模式开发</h2><p>LinkNode D1在Arduino Studio的库比较完善，环境配置也比较简单，适合刚开始接触LinkNode D1的用户快速熟悉其特性或开始工程。使用Arduino Studio进行开发的方式如下。</p>
+<h3 id="Arduino-Studio开发环境搭建"><a href="#Arduino-Studio开发环境搭建" class="headerlink" title="Arduino Studio开发环境搭建"></a>Arduino Studio开发环境搭建</h3><p>首先下载并安装Arduino Studio，运行程序。在“文件”菜单中打开首选项。如下图所示，在“附加开发版管理器网址”一栏里添加如下网址以获得ESP-8266EX的有关参数：<br><code>http://arduino.esp8266.com/stable/package_esp8266com_index.json</code>。如果已经添加过其他网址，用逗号隔开多个网址。<br><img src="/uploads/ESP8266-LinkNodeD1/Arduino-Setting.png"><br>保存后打开“工具”-&gt;”开发板”-&gt;“开发板管理器”，在弹出的开发板管理器窗口里搜索“esp8266”，选择一个版本进行安装。<br><img src="/uploads/ESP8266-LinkNodeD1/Board-Manager.png"><br>安装完开发板信息后，再打开“项目”-&gt;“加载库”-&gt;“管理库”，在库管理器窗口里搜索“wifimanager”，点击安装。<br><img src="/uploads/ESP8266-LinkNodeD1/Library-Manager.png"><br>最后在“工具”菜单里选择开发板为“WeMos D1 (Retired)”，CPU Frequency为80 MHz，Flash Size为“4M (3M SPIFFS)”，Upload Speed为921600，并选择对应的串口。至此，开发环境配置完成。<br><img src="/uploads/ESP8266-LinkNodeD1/Board-Setting.png"></p>
+<h3 id="编写烧录程序"><a href="#编写烧录程序" class="headerlink" title="编写烧录程序"></a>编写烧录程序</h3><p>在不外接扩展设备的情况下，LinkNode D1与用户的主要交互手段有两个，一是ESP-8266芯片上的LED灯，二是串口。接下来先写一个最简单的程序，实现LED灯闪烁和串口发送“Hello, World!”。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// initialize digital pin GPIO2/D9 as an output.</span></span><br><span class="line">    pinMode(BUILTIN_LED, OUTPUT);</span><br><span class="line">    Serial.begin(<span class="number">115200</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    digitalWrite(BUILTIN_LED, HIGH);   <span class="comment">// turn the LED on (HIGH is the voltage level)</span></span><br><span class="line">    delay(<span class="number">1000</span>);              <span class="comment">// wait for a second</span></span><br><span class="line">    digitalWrite(BUILTIN_LED, LOW);    <span class="comment">// turn the LED off by making the voltage LOW</span></span><br><span class="line">    delay(<span class="number">1000</span>);              <span class="comment">// wait for a second</span></span><br><span class="line">    Serial.println(<span class="string">&quot;Hello world!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>点击Arduino Studio上的上传按钮将文件上传到开发板上。之后打开“工具”-&gt;“串口监视器”，在右下角将波特率设置为115200。可以看到，开发板上的灯开始闪烁，并能在串口监视器中看到“Hello, World!”。</p>
+<h3 id="使用WiFi-Manager连接到路由器"><a href="#使用WiFi-Manager连接到路由器" class="headerlink" title="使用WiFi Manager连接到路由器"></a>使用WiFi Manager连接到路由器</h3><p>ESP-8266EX提供的WiFi Manager库可以使芯片很容易通过无线AP接入互联网。因为其支持AP模式和SAT模式，所以思路是先让LinkNode作为无线AP，待其他移动设备连接到无线AP后，通过LinkNode的管理页面选择SSID并输入密码，最后LinkNode再以STA模式接入选定的无线AP，从而连入互联网。<br>在Arduino Studio中修改代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ESP8266WiFi.h&gt;          //https://github.com/esp8266/Arduino</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;DNSServer.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ESP8266WebServer.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;WiFiManager.h&gt;         //https://github.com/tzapu/WiFiManager</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Serial.begin(<span class="number">115200</span>);</span><br><span class="line">    WiFiManager wifiManager;</span><br><span class="line">    wifiManager.setAPStaticIPConfig(IPAddress(<span class="number">10</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>), IPAddress(<span class="number">10</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>), IPAddress(<span class="number">255</span>,<span class="number">255</span>,<span class="number">255</span>,<span class="number">0</span>));</span><br><span class="line">    wifiManager.autoConnect(<span class="string">&quot;LinkNodeAP&quot;</span>);</span><br><span class="line">    Serial.println(<span class="string">&quot;connected... :)&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>点击上传后，使用手机搜索WiFi，可以看到LinkNodeAP的SSID。连接并进入配置界面<code>http://10.0.1.1/</code>，如图所示：<br><img src="/uploads/ESP8266-LinkNodeD1/LinkNodeAP-WiFiManager.png"><br>点击Configure WiFi，LinkNode会搜索附近的WiFi，同时在串口和手机网页输出AP信息。输入SSID和密码接入网络，这些信息会被存储，除非在代码里调用用wifiManager.resetSettings() 清除配置。</p>
+<p>接入网络后，串口监视器里也可以看到提示。<br><img src="/uploads/ESP8266-LinkNodeD1/Arduino-WiFi.png"></p>
+<h2 id="使用NodeMCU模式开发"><a href="#使用NodeMCU模式开发" class="headerlink" title="使用NodeMCU模式开发"></a>使用NodeMCU模式开发</h2><p><a target="_blank" rel="noopener" href="http://www.nodemcu.com/">NodeMCU</a>使用脚本语言Lua为ESP8266直接编写固件，由于其轻量、接口封装好等特点受到开发者很大欢迎。这款LinkNode D1也支持使用NodeMCU直接向ESP8266刷写程序。使用NodeMCU的方式如下。</p>
+<h3 id="刷写"><a href="#刷写" class="headerlink" title="刷写"></a>刷写</h3><p>首先使用<a target="_blank" rel="noopener" href="https://github.com/nodemcu/nodemcu-flasher">NodeMCU Flasher</a>刷写，波特率设置为9600（可以修改为别的速率）。然后选择端口，点击刷写。在9600的速度下刷写过程需要大约5分钟，耐心等待完成。</p>
+<h3 id="上传程序"><a href="#上传程序" class="headerlink" title="上传程序"></a>上传程序</h3><p>NodeMCU有多种方式上传程序，这里选用使用Java编写，支持跨多平台的<a target="_blank" rel="noopener" href="https://github.com/4refr0nt/ESPlorer">ESPlorer</a>。</p>
+<ol>
+<li>将LinkNode D1连接到电脑上并运行ESPlorer.jar</li>
+<li>在ESPlorer右侧点击刷新按钮，选择LinkNode D1对应的串口号，点击Open打开串口。如果此时Open状态灯为红色，按下LinkNode D1上的reset按钮，状态灯转绿后可以继续操作</li>
+<li>新建一个init.lua，使ESP8266上的LED常亮，代码如下所示<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- init.lua</span></span><br><span class="line">pin = <span class="number">4</span></span><br><span class="line">gpio.mode(pin, gpio.OUTPUT)</span><br><span class="line">gpio.<span class="built_in">write</span>(pin, gpio.LOW)</span><br><span class="line"><span class="built_in">print</span>(gpio.<span class="built_in">read</span>(pin))</span><br></pre></td></tr></table></figure></li>
+<li>点击左下角的Save to ESP，等待上传完成后可以看到，LED灯被点亮<br><img src="/uploads/ESP8266-LinkNodeD1/Lua-Upload.png"></li>
+</ol>
+<h3 id="连接到路由器"><a href="#连接到路由器" class="headerlink" title="连接到路由器"></a>连接到路由器</h3><p>修改init.lua，输入如下内容。设置WiFi模式为STATION。输入所在环境下无线路由器的SSID和密码，连接到路由器上。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">startup</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">if</span> file.<span class="built_in">open</span>(<span class="string">&quot;init.lua&quot;</span>) == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;init.lua deleted or renamed&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Running&quot;</span>)</span><br><span class="line">        file.<span class="built_in">close</span>(<span class="string">&quot;init.lua&quot;</span>)</span><br><span class="line">        <span class="comment">-- the actual application is stored in &#x27;application.lua&#x27;</span></span><br><span class="line">        <span class="comment">-- dofile(&quot;application.lua&quot;)</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Connecting to WiFi access point...&quot;</span>)</span><br><span class="line">wifi.setmode(wifi.STATION)</span><br><span class="line">wifi.sta.<span class="built_in">config</span>(<span class="string">&quot;SSID&quot;</span>, <span class="string">&quot;PASSWORD&quot;</span>)</span><br><span class="line">tmr.alarm(<span class="number">1</span>, <span class="number">1000</span>, <span class="number">1</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">if</span> wifi.sta.getip() == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Waiting for IP address...&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        tmr.stop(<span class="number">1</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;WiFi connection established, IP address: &quot;</span> .. wifi.sta.getip())</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;You have 3 seconds to abort&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Waiting...&quot;</span>)</span><br><span class="line">        tmr.alarm(<span class="number">0</span>, <span class="number">3000</span>, <span class="number">0</span>, startup)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>)</span><br></pre></td></tr></table></figure>
+<p>点击Save to ESP，等待文件上传完成。Init.lua会在启动时被自动加载运行。这时可以看到，LinkNode已经连接到了无线路由器上，并取得了IP地址。<br><img src="/uploads/ESP8266-LinkNodeD1/NodeMCU-WiFi.png"><br>此时重新刷写其他程序不会影响WiFi连接。</p>
+<h2 id="使用LinkSprite-IO云平台"><a href="#使用LinkSprite-IO云平台" class="headerlink" title="使用LinkSprite IO云平台"></a>使用LinkSprite IO云平台</h2><p>LinkSpritIO 是LinkSprite公司开发的云平台，支持RESTful API和WebSocket，可以实现网页/桌面/移动端对LinkNode等IoT设备的控制和信息交互。<br>在LinkSpritIO中，所有数据包都以JSON格式存储，通过HTTP传输。其提供了两套API，分别供IoT设备和其他设备使用，所有API都支持Update和Query操作。用户除了使用API，也可以在LinkSprite IO的网页上直接对数据进行查询和修改。<br>LinkSprite IO的使用非常简便。先在其网站注册账号，注册后点击“My Profile”，可以看到一个API Key。再点击“My Device”，选择“Create New Device”，“Device Type”选择“Simple Light“，之后可以看到一个Device ID。API Key和Device ID是区别不同设备的重要标识。<br>到这里，LinkSPrite IO上的工程就建立完成了，接下来编写LinkNode D1上的程序。以Arduino Studio开发模式为例，使用刚刚已经连接到互联网上的开发版，修改代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ESP8266WiFi.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;WString.h&gt;</span></span></span><br><span class="line"><span class="comment">//the library are needed for autoconfig WiFi</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;DNSServer.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ESP8266WebServer.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;WiFiManager.h&gt;       </span></span></span><br><span class="line"><span class="comment">// replace with your own API key and device ID,</span></span><br><span class="line"></span><br><span class="line">String apikey = <span class="string">&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* deviceID=<span class="string">&quot;xxxxxxxxxxxxx&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* server = <span class="string">&quot;www.linksprite.io&quot;</span>;</span><br><span class="line">WiFiClient client;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span> </span>&#123;                </span><br><span class="line">    Serial.begin(<span class="number">115200</span>);</span><br><span class="line">    pinMode(BUILTIN_LED, OUTPUT);</span><br><span class="line">    WiFiManager wifiManager;</span><br><span class="line">    wifiManager.setAPStaticIPConfig(IPAddress(<span class="number">10</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>), IPAddress(<span class="number">10</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>), IPAddress(<span class="number">255</span>,<span class="number">255</span>,<span class="number">255</span>,<span class="number">0</span>));</span><br><span class="line">    wifiManager.autoConnect(<span class="string">&quot;LinkNodeAP&quot;</span>);</span><br><span class="line">    Serial.print(<span class="string">&quot;WiFi Connected ...\n&quot;</span>);</span><br><span class="line">    Serial.println(<span class="string">&quot;WiFi connected&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (client.connect(server,<span class="number">80</span>)) &#123;  </span><br><span class="line">        String  postStr =<span class="string">&quot;&#123;&quot;</span>;</span><br><span class="line">            postStr +=<span class="string">&quot;\&quot;action\&quot;:\&quot;query\&quot;,&quot;</span>;</span><br><span class="line">            postStr +=<span class="string">&quot;\&quot;apikey\&quot;:\&quot;&quot;</span>;</span><br><span class="line">            postStr += apikey;</span><br><span class="line">            postStr +=<span class="string">&quot;\&quot;,&quot;</span>;</span><br><span class="line">            postStr +=<span class="string">&quot;\&quot;deviceid\&quot;:\&quot;&quot;</span>;</span><br><span class="line">            postStr += deviceID;</span><br><span class="line">            postStr +=<span class="string">&quot;\&quot;,&quot;</span>;</span><br><span class="line">            postStr += <span class="string">&quot;\&quot;params\&quot;:&quot;</span>;</span><br><span class="line">            postStr += <span class="string">&quot;[&quot;</span>;</span><br><span class="line">            postStr += <span class="string">&quot;\&quot;light\&quot;&quot;</span>;</span><br><span class="line">            postStr +=<span class="string">&quot;]&quot;</span>;</span><br><span class="line">            postStr +=<span class="string">&quot;&#125;&quot;</span>;</span><br><span class="line">       client.print(<span class="string">&quot;POST /api/http HTTP/1.1\n&quot;</span>);</span><br><span class="line">       client.print(<span class="string">&quot;Host: &quot;</span>);</span><br><span class="line">       client.print(server);</span><br><span class="line">       client.print(<span class="string">&quot;\nContent-Type: application/json\n&quot;</span>);</span><br><span class="line">       client.print(<span class="string">&quot;Content-Length: &quot;</span>);</span><br><span class="line">       client.print(postStr.length());</span><br><span class="line">       client.print(<span class="string">&quot;\n\n&quot;</span>);</span><br><span class="line">       client.print(postStr);     </span><br><span class="line">     &#125;</span><br><span class="line">    delay(<span class="number">1000</span>);</span><br><span class="line">    Serial.println(<span class="string">&quot;Store response...&quot;</span>);</span><br><span class="line">    String request = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">while</span> (client.available()) &#123;</span><br><span class="line">        <span class="keyword">char</span> c = client.read();</span><br><span class="line">        request +=c;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (request != <span class="literal">NULL</span>) &#123;</span><br><span class="line">      <span class="keyword">int</span> index1 = request.indexOf(<span class="string">&quot;:&#123;&quot;</span>);</span><br><span class="line">      <span class="keyword">int</span> index2 = request.indexOf(<span class="string">&quot;&#125;,&quot;</span>);</span><br><span class="line">      String param = request.substring(index1, index2 + <span class="number">1</span>);</span><br><span class="line">      Serial.print(<span class="string">&quot;The param is &quot;</span>);</span><br><span class="line">      Serial.println(param);</span><br><span class="line">      <span class="keyword">if</span>(param.indexOf(<span class="string">&quot;off&quot;</span>)&gt;<span class="number">0</span>) &#123;</span><br><span class="line">          digitalWrite(BUILTIN_LED, HIGH);    </span><br><span class="line">          Serial.println(<span class="string">&quot;OFF&quot;</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span>(param.indexOf(<span class="string">&quot;on&quot;</span>)&gt;<span class="number">0</span>) &#123;</span><br><span class="line">          digitalWrite(BUILTIN_LED, LOW);    </span><br><span class="line">          Serial.println(<span class="string">&quot;ON&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    client.stop();</span><br><span class="line">    Serial.println(<span class="string">&quot;Waiting...&quot;</span>);    </span><br><span class="line">    delay(<span class="number">2000</span>);  </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段程序里构造了HTTP请求并以POST方式发送给LinkSprite IO，同时接受返回的信息。如果使用NodeMCU模式开发，则使用conn模块发送HTTP请求，同理可以达到这一效果。<br>上传到开发板后，在LinkSprite IO的页面里点击Light On或Light Off并点击Save，这个Device里的json的值会发生变化。LinkNode D1通过网络读取到json的变化，并据此改变LED等的状态。</p>
+<p>有了API Key和Device ID，用户也可以在其他程序中通过发送HTTP请求来完成对LinkNode设备的控制。通过支持LinkSprite API的Gateway，还可以将应用范围扩展到Bluetooth、ZigBee等其他设备上。</p>
+<hr>
+<p><del>软文</del>总结部分就不发啦，想看原文可以去买杂志~</p>
+<p>以及截止本文测试的时候，CH340仍然 <strong>没有</strong> 一个Apple官方支持的驱动，如果直接安装其官网提供的mac驱动并连上USB就会报kernel panic，导致系统重置，需要小心。建议最好在Windows平台下使用该开发板。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ESP8266/" rel="tag"># ESP8266</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/03/23/mac-setup-gdb-and-lldb/" rel="prev" title="macOS Sierra配置GDB和lldb">
+      <i class="fa fa-chevron-left"></i> macOS Sierra配置GDB和lldb
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/05/16/ESP8266-MicroPython/" rel="next" title="给ESP8266用上MicroPython">
+      给ESP8266用上MicroPython <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LinkNode-D1-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">LinkNode D1 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Arduino%E6%A8%A1%E5%BC%8F%E5%BC%80%E5%8F%91"><span class="nav-number">2.</span> <span class="nav-text">使用Arduino模式开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Arduino-Studio%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">2.1.</span> <span class="nav-text">Arduino Studio开发环境搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E7%83%A7%E5%BD%95%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.2.</span> <span class="nav-text">编写烧录程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8WiFi-Manager%E8%BF%9E%E6%8E%A5%E5%88%B0%E8%B7%AF%E7%94%B1%E5%99%A8"><span class="nav-number">2.3.</span> <span class="nav-text">使用WiFi Manager连接到路由器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8NodeMCU%E6%A8%A1%E5%BC%8F%E5%BC%80%E5%8F%91"><span class="nav-number">3.</span> <span class="nav-text">使用NodeMCU模式开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%B7%E5%86%99"><span class="nav-number">3.1.</span> <span class="nav-text">刷写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E4%BC%A0%E7%A8%8B%E5%BA%8F"><span class="nav-number">3.2.</span> <span class="nav-text">上传程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E5%88%B0%E8%B7%AF%E7%94%B1%E5%99%A8"><span class="nav-number">3.3.</span> <span class="nav-text">连接到路由器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8LinkSprite-IO%E4%BA%91%E5%B9%B3%E5%8F%B0"><span class="nav-number">4.</span> <span class="nav-text">使用LinkSprite IO云平台</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ZJUBank"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZJUBank</p>
+  <div class="site-description" itemprop="description">「みんなで叶える物語」</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjubank" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjubank" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZJUBank</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://zjubank.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://zjubank.com/2017/05/15/ESP8266-LinkNodeD1/";
+    this.page.identifier = "2017/05/15/ESP8266-LinkNodeD1/";
+    this.page.title = "LinkNode D1 评测与使用";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://zjubank.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

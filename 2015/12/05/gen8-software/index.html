@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="FDdrJxNJ7ZlaHtxMG0bqn8O4IY-B35_4cjHcxcdzP6A">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjubank.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Gen8的硬件全部就位之后，就是系统的安装工作。（一边装一边写） 宿主软件：Windows Server vs VMWare ESXiGen8的宿主系统一般为Windows Server和VMWare ESXi。Windows Server 2012 R2可以在Microsoft Dreamspark上拿到，ESXi使用HP定制版（下载地址）。Windows Server的优势在于图形界面，熟悉W">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gen8打造寝室多用服务器（软件篇）">
+<meta property="og:url" content="http://zjubank.com/2015/12/05/gen8-software/index.html">
+<meta property="og:site_name" content="音ノ木坂学院">
+<meta property="og:description" content="Gen8的硬件全部就位之后，就是系统的安装工作。（一边装一边写） 宿主软件：Windows Server vs VMWare ESXiGen8的宿主系统一般为Windows Server和VMWare ESXi。Windows Server 2012 R2可以在Microsoft Dreamspark上拿到，ESXi使用HP定制版（下载地址）。Windows Server的优势在于图形界面，熟悉W">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2015-12-04T19:29:03.000Z">
+<meta property="article:modified_time" content="2016-08-03T16:21:46.000Z">
+<meta property="article:author" content="ZJUBank">
+<meta property="article:tag" content="ESXi">
+<meta property="article:tag" content="Gen8">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://zjubank.com/2015/12/05/gen8-software/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Gen8打造寝室多用服务器（软件篇） | 音ノ木坂学院</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-70857825-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-70857825-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">音ノ木坂学院</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">叶え！みんなの夢――</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">43</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">41</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zjubank.com/2015/12/05/gen8-software/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZJUBank">
+      <meta itemprop="description" content="「みんなで叶える物語」">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="音ノ木坂学院">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Gen8打造寝室多用服务器（软件篇）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2015-12-05 03:29:03" itemprop="dateCreated datePublished" datetime="2015-12-05T03:29:03+08:00">2015-12-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2016-08-04 00:21:46" itemprop="dateModified" datetime="2016-08-04T00:21:46+08:00">2016-08-04</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2015/12/05/gen8-software/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/12/05/gen8-software/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Gen8的硬件全部就位之后，就是系统的安装工作。<br>（一边装一边写）</p>
+<h2 id="宿主软件：Windows-Server-vs-VMWare-ESXi"><a href="#宿主软件：Windows-Server-vs-VMWare-ESXi" class="headerlink" title="宿主软件：Windows Server vs VMWare ESXi"></a>宿主软件：Windows Server vs VMWare ESXi</h2><p>Gen8的宿主系统一般为Windows Server和VMWare ESXi。Windows Server 2012 R2可以在Microsoft Dreamspark上拿到，ESXi使用HP定制版（<a target="_blank" rel="noopener" href="http://www8.hp.com/us/en/products/servers/solutions.html?compURI=1499005#tab=TAB4">下载地址</a>）。Windows Server的优势在于图形界面，熟悉Windows可以很容易上手；ESXi的优势在于是可以安装Mac OS X，而且逼格高（划掉），适合熟悉Linux的用户使用。对于我来说，使用ESXi还有一个好处，就是中二时期用Workstaion配置的一堆虚拟机都可以直接导进去而无需什么改变。于是我选择了ESXi。<br>看了一下发行列表，最新的是ESXi 6.0 Update1，网上大多资料是5.5或5.0。查了一下ESXi6的最新特性，主要是使用VMWare Workstation 11建立的虚拟机必须在ESXi6下才能打开。这点在之前Workstation转Fusion的时候深受其害。于是果断选择了ESXi6.0U1 发行号为3073146的版本。（后记：这里的确是搞错了，升级后不兼容的是Workstation 12的版本。尝试了一下Workstation 12的虚拟机导入ESXi 6.0提示不支持。搜了一下“ESXi Workstation 12”也没有补丁或解决方法，大概只能等待ESXi更新）。<br>需要说明的是，从ESXi5.5开始，对系统内存的要求就增加到了4G，不过对于我们的16G内存似乎没有太大问题。</p>
+ <a id="more"></a>
+<h2 id="磁盘配置：AHCI-vs-RAID"><a href="#磁盘配置：AHCI-vs-RAID" class="headerlink" title="磁盘配置：AHCI vs RAID"></a>磁盘配置：AHCI vs RAID</h2><p>Gen8默认使用自带的阵列工具，但是BIOS也支持AHCI模式。RAID模式的优点是配置简单，可以实现连续存储，使用RAID1+1的话还可以实现备份和恢复；缺点是SSD使用RAID0并不好，而且RAID模式下磁盘无法休眠，影响磁盘性能。AHCI模式的优点是磁盘和桌面环境一致，SSD可以发挥最大优势；然而缺点是SSD装系统需要想办法引导，而且由于非阵列模式下Gen8读取不到磁盘温度，风扇转速会很高导致噪音偏大（这个问题可以通过使用破解版BIOS解决）。<br>一开始我是选择AHCI模式，把ESXi装到SSD里；再在USB设备里安装grub2，用来引导系统。但是蛋疼的是尝试了好久都没法让Gen8读到TF卡或U盘里的grub2。由于某课DDL临近，急需一台主机，于是就改成了双RAID0。顺便安慰自己：咱用的可是Intel的SSD和红盘，跑RAID不怂！</p>
+<h2 id="ESXi安装和网络配置"><a href="#ESXi安装和网络配置" class="headerlink" title="ESXi安装和网络配置"></a>ESXi安装和网络配置</h2><p>Gen8提供了很多种系统安装方案。然而使用iLO加载光盘镜像直接安装的时候，会在Installing那一步报fail要求重启。查了一下说是因为RAID配出来的GPT盘没有被格式化，需要先格式化。连系统都没有你让我怎么格啊！（摔。Windows和Windows Server的安装盘在这里又蜜汁不能识别两个RAID。于是就刻了一个USB启动盘，选择USB启动，安装到SSD那个RAID上，一路确定安装成功。<br>ESXi安装好后可以看到一个黄灰相间的界面，这个时候需要配置网络。由于我的网口插了一根iLO，一根网卡2，所以需要在网络设置里把网卡2启用。然后等待路由器DHCP分配IP。最后使用ESXi自带的ping工具检测一下路由器IP，我浙DNS的IP和随便一个外网IP，确定都能ping通后网络配置就完成了。之后就可以通过VMWare vSphere Client设置这台主机了。<br>对于Gen8的双网卡，还想过另外一种配置，就是一条网卡直接连到学校内网，用于在学校内部访问Gen8而避免繁琐的路由器设置，同时保留一个网卡连接到拨了VPN的路由器上，用于Gen8访问外网。现在已经为Gen8申请了新的IP，具体设置似乎也不难？等这周交了作业大概可以开始搞。</p>
+<h2 id="vSphere下虚拟机安装、资源管理和硬件直通配置"><a href="#vSphere下虚拟机安装、资源管理和硬件直通配置" class="headerlink" title="vSphere下虚拟机安装、资源管理和硬件直通配置"></a>vSphere下虚拟机安装、资源管理和硬件直通配置</h2><p>由于使用了6.0U1的ESXi，vSphere Client也要更新到6.0以及上，最好也是6.0U1，不然连接后会要求下载组件，还总是下载失败。如果曾经安装过旧版本，从VMWare官网下载最新版本的vSphere直接覆盖安装即可。<br>登录界面有个提示，ESXi5.5之后的功能只能在vSphere Web Client里使用。<br>VMWare Client 6.0U1的<a target="_blank" rel="noopener" href="http://vsphereclient.vmware.com/vsphereclient/3/0/1/6/4/4/7/VMware-viclient-all-6.0.0-3016447.exe">官网下载链接</a>以及<a target="_blank" rel="noopener" href="http://7xout0.com1.z0.glb.clouddn.com/VMware-viclient-all-6.0.0-3016447.exe">备份下载链接</a>。如果试用期没过的话Client都可以直接在My VMWare里下，如果试用期过了就可以来<a target="_blank" rel="noopener" href="https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=2089791">这里</a>。下载后建议检验一下MD5或SHA1。<br>顺带一个<a target="_blank" rel="noopener" href="http://7xout0.com1.z0.glb.clouddn.com/vSphere6_keygen.zip">福利</a>，你懂的。</p>
+<h3 id="Workstation虚拟机导入到ESXi"><a href="#Workstation虚拟机导入到ESXi" class="headerlink" title="Workstation虚拟机导入到ESXi"></a>Workstation虚拟机导入到ESXi</h3><p>打开Wordstation，文件-&gt;连接到服务器，输入ESXi服务器的IP地址、用户名和密码。连接成功后会在左边“库”里看到多出来一个和“我的计算机”并列的服务器。直接把“我的计算机”下的虚拟机拖动到服务器下，名称可以不用变，存储选择SSD那个RAID（因为速度会快很多），点击确定，接下来就看硬盘和网速了。<br>迁移完成后，还需要对虚拟机设置进行一点调整，比如硬盘的分配，还有内存和CPU等。<br>话说我在Mac的vSphere里打开了迁移过去的虚拟机，Thinkpad的Workstation里立刻看到了图形界面，感觉简直爽！以后就可以用Fusion，抛弃Parallels了。</p>
+<h3 id="OS-X安装"><a href="#OS-X安装" class="headerlink" title="OS X安装"></a>OS X安装</h3><p>vSphere里添加虚拟机和Workstation的步骤没有什么不同，这里重点要讲一下OS X的安装。如果之前有Workstation安装OS X的经历会非常方便（似乎不小心暗示了曾经装黑苹果失败的事实）。<br>对于unlocker，这里使用2.08版本（<a target="_blank" rel="noopener" href="http://www.daveparsons.net/downloads/unlocker208.zip">下载地址</a>）。<br>对于OS X版本，可以安装旧版本然后更新（似乎从Lion安装最容易？），也有直接装Capitan成功的。查了一下VMWare官网，6.0U1的确支持10.11。于是直接上Capitan！（事实上是因为直接装Yosemite的时候会提示“已经不再提供此商品”）<br>这里偷了一下懒，直接从PCBeta上下载了网友制作的懒人版镜像，把cdr直接改成iso，上传到存储里。新建一个OS X 10.10类型的虚拟机，分配了2*2核和8G内存，把iso加载到光驱里勾上开机链接，点开机，就可以一步一步安装了。</p>
+<p>（说来做到这里的时候正在等下载，回头一看Mac上用来跑vSphere的Win10 on Parallels突然更新了……更新了……这感觉就好像买了两只仓鼠放寝室用来看，结果它们俩下崽了一样……不过win10对高DPI的支持真是肉眼可见的越来越棒，所以更新就让它更吧……）</p>
+<p>为硬件直通做准备，显卡安装驱动。我的显卡是R7 250，<a target="_blank" rel="noopener" href="http://7xout0.com1.z0.glb.clouddn.com/Radeon%20R7%20250%20for%20El%20Capitan.dmg">下载地址</a>。</p>
+<h3 id="Gen8的RAID卡在ESXi下的速度问题"><a href="#Gen8的RAID卡在ESXi下的速度问题" class="headerlink" title="Gen8的RAID卡在ESXi下的速度问题"></a>Gen8的RAID卡在ESXi下的速度问题</h3><p>在OS X安装过程中，需要把几个G的安装文件拷贝到磁盘上，速度非常之慢。看着任务管理器里的网络连接一直在70Mb/s附近来回跳，突然意识到：不对啊！这个配置怎么也应该是100MB/s附近的读写吧（网卡限制）！服务器端7MB/s的读写速度是什么鬼啊！<br>于是赶快谷歌一下”ESXi6 Gen8”，看到了各种”Low I/O Performance””Very Slow to datastores”之类的post……<br>仔细研究一下，是Gen8使用的RAID卡的驱动，在ESXi5.5的某个Update2版本(2068190还没换，2403361已经换了)中更新了，而新版本驱动就会导致这个问题。<br>解决办法要么装低版本的ESXi5.5，要么就用ssh把B120i的驱动刷到较低版本。<br>下载(我最后用的88版本)：<br>包含scsi-hpvsa-5.5.0-84OEM.550.0.0.1198611.x86_64.vib的<a target="_blank" rel="noopener" href="http://7xout0.com1.z0.glb.clouddn.com/hpvsa-5.5.0-84.0-offline-bundle.zip">hpvsa-5.5.0-84.0-offline-bundle.zip</a><br>包含scsi-hpvsa-5.5.0-88OEM.550.0.0.1331820.x86_64.vib的<a target="_blank" rel="noopener" href="http://7xout0.com1.z0.glb.clouddn.com/hpvsa-5.5.0-88.zip">hpvsa-5.5.0-88.zip</a><br>（要用zip的原因是，http拿到vib其实是重新生成的，虽然加了nosigcheck选项，但是似乎还是会出现检测错误？我第一次安装的时候没看到InstallationError就Exit再重启了，然后重启之后整个阵列找不到，所有虚拟机都提示没有对应的存储设备，然后还手贱把虚拟机全删了，等意识到发生了什么后整个人全蒙圈了……于是在SSD上新建了一块存储，传上了能用的vib文件，然后安装成功了……幸好重新启动后原来的存储还在，找到虚拟机文件右键“添加到清单”也还能用……）<br>下载后先上传到ESXi存储里，这里使用88的版本，然后连接ssh<br>ssh在“主机-&gt;配置选项卡-&gt;软件/安全配置文件-&gt;服务/属性”里启动<br>存储设备在<code>/vmfs/volumes/</code>中可以看到卷标</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp scsi-hpvsa-5.5.0-88OEM.550.0.0.1331820.x86_64.vib /var/<span class="built_in">log</span>/vmware/</span><br><span class="line">esxcli system maintenanceMode <span class="built_in">set</span> --<span class="built_in">enable</span> <span class="literal">true</span></span><br><span class="line">esxcli software vib remove -n scsi-hpvsa -f</span><br><span class="line">esxcli software vib install -v file:scsi-hpvsa-5.5.0-88OEM.550.0.0.1331820.x86_64.vib --force --no-sig-check --maintenance-mode</span><br></pre></td></tr></table></figure>
+<p>过程略慢，完成后重启ESXi，在vSphere中退出维护模式。ssh似乎会自动关闭。<br>装完之后第一次测试，一开始速度冲到了90M/s附近，但是两秒钟后速度就往下掉。想了一下原因，猜测是在阵列卡里打开了Writing cache。关闭之后再次重启测试，速度基本能在80M/s附近波动，也算差强人意了。</p>
+<h3 id="黑群晖安装"><a href="#黑群晖安装" class="headerlink" title="黑群晖安装"></a>黑群晖安装</h3><p>似乎可以使用模版很快完成，需要查一下版本等问题。</p>
+<h3 id="数据盘挂载和共享"><a href="#数据盘挂载和共享" class="headerlink" title="数据盘挂载和共享"></a>数据盘挂载和共享</h3><p>目标：16T的RAID至少可以被Win和黑裙访问。之后物理机C盘丢在SSD上，其他盘丢在16TRAID上。<br>似乎有个东西叫RDM磁盘映射？</p>
+<h3 id="资源池配置"><a href="#资源池配置" class="headerlink" title="资源池配置"></a>资源池配置</h3><p>其实已经做完了www</p>
+<h3 id="物理机虚拟化导入到ESXi"><a href="#物理机虚拟化导入到ESXi" class="headerlink" title="物理机虚拟化导入到ESXi"></a>物理机虚拟化导入到ESXi</h3><p>全部配置完成后，原有的Thinkpad就可以卖了（认真脸）。但是里面的资料和软件还是很重要的，所以需要虚拟化，然后导到ESXi。这里使用VMWare vCenter Converter Standalone。</p>
+<h3 id="虚拟机硬件直通"><a href="#虚拟机硬件直通" class="headerlink" title="虚拟机硬件直通"></a>虚拟机硬件直通</h3><p>虚拟机导入／安装好后，只用Workstaion或Fusion来使用也太亏了，毕竟还有现成的屏幕和键鼠。于是这里设置一下硬件直通，让虚拟机里的OS可以直接访问显卡，并通过显卡上的MiniDP接口输出到显示器上。<br>重点是驱动，驱动，驱动。<br>还备用了一份USB3.0的驱动。</p>
+<h2 id="卖电脑（没啥不对）"><a href="#卖电脑（没啥不对）" class="headerlink" title="卖电脑（没啥不对）"></a>卖电脑（没啥不对）</h2><p>于是就在98数码版挂了一下。我不知道什么µ’s Fan Meeting，就想要两千块钱。</p>
+<p>接下来应该是新机子正式投入到开发了吧……先有明天DDL的海量多媒体索引的论文，虽然不一定立刻实现但是似乎可以涌来做那个求计立项的项目；下周还有导师安排的使用CNN的Multi-Domain的一个追踪，大概可以用这个机子装一下Caffe；然后十二月中旬还有智能终端的项目，我们组的项目需要爬校内各种网战，还要相应客户端请求，估计也是用这台机子吧（玉泉不断网简直太好了）。<br>总之十二月其实会很忙吧。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ESXi/" rel="tag"># ESXi</a>
+              <a href="/tags/Gen8/" rel="tag"># Gen8</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2015/12/03/gen8-hardware/" rel="prev" title="Gen8打造寝室多用服务器（硬件篇）">
+      <i class="fa fa-chevron-left"></i> Gen8打造寝室多用服务器（硬件篇）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2015/12/05/lovelive-winter2015/" rel="next" title="Silent Tonight">
+      Silent Tonight <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%BF%E4%B8%BB%E8%BD%AF%E4%BB%B6%EF%BC%9AWindows-Server-vs-VMWare-ESXi"><span class="nav-number">1.</span> <span class="nav-text">宿主软件：Windows Server vs VMWare ESXi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E9%85%8D%E7%BD%AE%EF%BC%9AAHCI-vs-RAID"><span class="nav-number">2.</span> <span class="nav-text">磁盘配置：AHCI vs RAID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ESXi%E5%AE%89%E8%A3%85%E5%92%8C%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">ESXi安装和网络配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vSphere%E4%B8%8B%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85%E3%80%81%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%92%8C%E7%A1%AC%E4%BB%B6%E7%9B%B4%E9%80%9A%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">vSphere下虚拟机安装、资源管理和硬件直通配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Workstation%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AF%BC%E5%85%A5%E5%88%B0ESXi"><span class="nav-number">4.1.</span> <span class="nav-text">Workstation虚拟机导入到ESXi</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OS-X%E5%AE%89%E8%A3%85"><span class="nav-number">4.2.</span> <span class="nav-text">OS X安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gen8%E7%9A%84RAID%E5%8D%A1%E5%9C%A8ESXi%E4%B8%8B%E7%9A%84%E9%80%9F%E5%BA%A6%E9%97%AE%E9%A2%98"><span class="nav-number">4.3.</span> <span class="nav-text">Gen8的RAID卡在ESXi下的速度问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%91%E7%BE%A4%E6%99%96%E5%AE%89%E8%A3%85"><span class="nav-number">4.4.</span> <span class="nav-text">黑群晖安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9B%98%E6%8C%82%E8%BD%BD%E5%92%8C%E5%85%B1%E4%BA%AB"><span class="nav-number">4.5.</span> <span class="nav-text">数据盘挂载和共享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E6%B1%A0%E9%85%8D%E7%BD%AE"><span class="nav-number">4.6.</span> <span class="nav-text">资源池配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E6%9C%BA%E8%99%9A%E6%8B%9F%E5%8C%96%E5%AF%BC%E5%85%A5%E5%88%B0ESXi"><span class="nav-number">4.7.</span> <span class="nav-text">物理机虚拟化导入到ESXi</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A1%AC%E4%BB%B6%E7%9B%B4%E9%80%9A"><span class="nav-number">4.8.</span> <span class="nav-text">虚拟机硬件直通</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%96%E7%94%B5%E8%84%91%EF%BC%88%E6%B2%A1%E5%95%A5%E4%B8%8D%E5%AF%B9%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">卖电脑（没啥不对）</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ZJUBank"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZJUBank</p>
+  <div class="site-description" itemprop="description">「みんなで叶える物語」</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjubank" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjubank" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZJUBank</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://zjubank.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://zjubank.com/2015/12/05/gen8-software/";
+    this.page.identifier = "2015/12/05/gen8-software/";
+    this.page.title = "Gen8打造寝室多用服务器（软件篇）";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://zjubank.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

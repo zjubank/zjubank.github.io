@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="FDdrJxNJ7ZlaHtxMG0bqn8O4IY-B35_4cjHcxcdzP6A">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjubank.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前段时间Macbook被从键盘上倒了半瓶海之言，虽然送去检查说主板零件没有问题，但是键盘有好多键的手感明显肉了很多，于是就考虑拆掉清洗一下。 我的MacBook Pro是13.3’ 2015 Early的，里面白色支架的型号是A07，与旧版A06有所不同。不过主要体现在装回去的时候如何对齐。简单记录一下拆解和装回的过程。 拆拆主键主键的拆卸方式最基础，先抬起键帽上方的任意一个角，比如左上角，同时用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MacBook拆键帽记录">
+<meta property="og:url" content="http://zjubank.com/2016/05/29/macbook-keyboard/index.html">
+<meta property="og:site_name" content="音ノ木坂学院">
+<meta property="og:description" content="前段时间Macbook被从键盘上倒了半瓶海之言，虽然送去检查说主板零件没有问题，但是键盘有好多键的手感明显肉了很多，于是就考虑拆掉清洗一下。 我的MacBook Pro是13.3’ 2015 Early的，里面白色支架的型号是A07，与旧版A06有所不同。不过主要体现在装回去的时候如何对齐。简单记录一下拆解和装回的过程。 拆拆主键主键的拆卸方式最基础，先抬起键帽上方的任意一个角，比如左上角，同时用">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-05-28T18:49:57.000Z">
+<meta property="article:modified_time" content="2016-08-04T14:38:48.000Z">
+<meta property="article:author" content="ZJUBank">
+<meta property="article:tag" content="MacBook">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://zjubank.com/2016/05/29/macbook-keyboard/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>MacBook拆键帽记录 | 音ノ木坂学院</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-70857825-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-70857825-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">音ノ木坂学院</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">叶え！みんなの夢――</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">43</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">41</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zjubank.com/2016/05/29/macbook-keyboard/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZJUBank">
+      <meta itemprop="description" content="「みんなで叶える物語」">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="音ノ木坂学院">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MacBook拆键帽记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-05-29 02:49:57" itemprop="dateCreated datePublished" datetime="2016-05-29T02:49:57+08:00">2016-05-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2016-08-04 22:38:48" itemprop="dateModified" datetime="2016-08-04T22:38:48+08:00">2016-08-04</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2016/05/29/macbook-keyboard/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/05/29/macbook-keyboard/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>前段时间Macbook被从键盘上倒了半瓶海之言，虽然送去检查说主板零件没有问题，但是键盘有好多键的手感明显肉了很多，于是就考虑拆掉清洗一下。</p>
+<p>我的MacBook Pro是13.3’ 2015 Early的，里面白色支架的型号是A07，与旧版A06有所不同。不过主要体现在装回去的时候如何对齐。简单记录一下拆解和装回的过程。</p>
+<h2 id="拆"><a href="#拆" class="headerlink" title="拆"></a>拆</h2><h3 id="拆主键"><a href="#拆主键" class="headerlink" title="拆主键"></a>拆主键</h3><p>主键的拆卸方式最基础，先抬起键帽上方的任意一个角，比如左上角，同时用力按住其对角线上的右下角，听到“啪”的声音后说明一个卡扣已经取下。这时候换另外一个上方的角，这次是右上角，用力按住其对角线上的左下角，取下另外一个卡扣。这时键帽、薄膜和键盘底座应该已经分离。同时中间的白色弹性薄膜分为两小块，要可以小心取下分开，也可以不用分开直接清洗，但一定小心不要弄断。</p>
+<a id="more"></a>
+
+<h3 id="拆功能键"><a href="#拆功能键" class="headerlink" title="拆功能键"></a>拆功能键</h3><p><strong>警告：功能键的支架非常容易损坏</strong>（我拆了8个断了两个……）<strong>请务必小心拆解</strong><br>功能键只需翘起键帽的左上角，然后按住右下角上抬，听到“啪”的声音后键帽就和支架脱离了。向下推键帽，键帽会竖起，这时左右摇晃键帽即可取出键帽。<br>接下来的拆支架是最危险的步骤，我没有参考网上的教程，先把支架抬起来，然后用镊子从右边挤压支架右下角。但是因为支架中间部分很脆，用力过大就很有可能把下面的部分弄断。<br>后来思考了一下，其实可以先把下面的金属片向外掰，之后也许就可以完美取出。</p>
+<h3 id="拆长键"><a href="#拆长键" class="headerlink" title="拆长键"></a>拆长键</h3><p>这里只拆了Tab键。Tab键除了卡扣之外多了一个平衡杆。用同样的方法拆键帽，之后小心抬起键帽。按照平衡杆安装的相反方向取下平衡杆即可。</p>
+<h2 id="清洗"><a href="#清洗" class="headerlink" title="清洗"></a>清洗</h2><p>清洗并不复杂（也可能是不会洗恩），在水里泡一泡擦干就没有然后了（笑）。</p>
+<h2 id="装"><a href="#装" class="headerlink" title="装"></a>装</h2><p><del>这个故事告诉我们做完了东西要马上写，过段时间就记不住了……勉强回忆一下安装过程，等下次拆的时候再补</del><br>首先观察好两个卡扣的关系，先把两个卡扣装好，然后把其中一个卡扣扣到键盘底座上。然后把键帽放在卡扣上，直接垂直按下键帽，听到啪的声音后另外一个卡扣就应该自动扣好了。<br>不过总之装比拆简单很多，也不容易引发什么事故，所以一次没装上的话重新拆下来多试几次没啥，就是这样。</p>
+<hr>
+<h3 id="装主键"><a href="#装主键" class="headerlink" title="装主键"></a>装主键</h3><h3 id="装功能键"><a href="#装功能键" class="headerlink" title="装功能键"></a>装功能键</h3><h3 id="装长键"><a href="#装长键" class="headerlink" title="装长键"></a>装长键</h3>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MacBook/" rel="tag"># MacBook</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/05/25/uchidaaya-callbook/" rel="prev" title="给你彩Concept Live写的call本">
+      <i class="fa fa-chevron-left"></i> 给你彩Concept Live写的call本
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/06/20/review-computer-networks/" rel="next" title="计网复习坑">
+      计网复习坑 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8B%86"><span class="nav-number">1.</span> <span class="nav-text">拆</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%86%E4%B8%BB%E9%94%AE"><span class="nav-number">1.1.</span> <span class="nav-text">拆主键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%86%E5%8A%9F%E8%83%BD%E9%94%AE"><span class="nav-number">1.2.</span> <span class="nav-text">拆功能键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%86%E9%95%BF%E9%94%AE"><span class="nav-number">1.3.</span> <span class="nav-text">拆长键</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%85%E6%B4%97"><span class="nav-number">2.</span> <span class="nav-text">清洗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A3%85%E4%B8%BB%E9%94%AE"><span class="nav-number">3.1.</span> <span class="nav-text">装主键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A3%85%E5%8A%9F%E8%83%BD%E9%94%AE"><span class="nav-number">3.2.</span> <span class="nav-text">装功能键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A3%85%E9%95%BF%E9%94%AE"><span class="nav-number">3.3.</span> <span class="nav-text">装长键</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ZJUBank"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZJUBank</p>
+  <div class="site-description" itemprop="description">「みんなで叶える物語」</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjubank" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjubank" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZJUBank</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://zjubank.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://zjubank.com/2016/05/29/macbook-keyboard/";
+    this.page.identifier = "2016/05/29/macbook-keyboard/";
+    this.page.title = "MacBook拆键帽记录";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://zjubank.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

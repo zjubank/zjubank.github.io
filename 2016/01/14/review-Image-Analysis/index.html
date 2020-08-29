@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta name="google-site-verification" content="FDdrJxNJ7ZlaHtxMG0bqn8O4IY-B35_4cjHcxcdzP6A">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zjubank.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":240,"display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="按照课本（讲义）顺序的一个复（yu）习纲要，也参考了PPT。 图像特征提取问题  通用 的视觉特征和 领域相关 的视觉特征 前者主要包括色彩、纹理和形状；后者与应用相关，如人脸特征、指纹特征等 因此， 视觉特征选取 非常重要  步骤  Extraction：特征提取 Representation：特征表达 Discrimination：区别性特征选择 Indexing&#x2F;Hashing：特征索引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图像信息处理复习坑">
+<meta property="og:url" content="http://zjubank.com/2016/01/14/review-Image-Analysis/index.html">
+<meta property="og:site_name" content="音ノ木坂学院">
+<meta property="og:description" content="按照课本（讲义）顺序的一个复（yu）习纲要，也参考了PPT。 图像特征提取问题  通用 的视觉特征和 领域相关 的视觉特征 前者主要包括色彩、纹理和形状；后者与应用相关，如人脸特征、指纹特征等 因此， 视觉特征选取 非常重要  步骤  Extraction：特征提取 Representation：特征表达 Discrimination：区别性特征选择 Indexing&#x2F;Hashing：特征索引">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-01-13T19:50:38.000Z">
+<meta property="article:modified_time" content="2016-07-19T06:55:51.000Z">
+<meta property="article:author" content="ZJUBank">
+<meta property="article:tag" content="Review">
+<meta property="article:tag" content="图像信息处理">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://zjubank.com/2016/01/14/review-Image-Analysis/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>图像信息处理复习坑 | 音ノ木坂学院</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-70857825-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-70857825-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">音ノ木坂学院</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">叶え！みんなの夢――</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">43</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">41</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zjubank.com/2016/01/14/review-Image-Analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZJUBank">
+      <meta itemprop="description" content="「みんなで叶える物語」">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="音ノ木坂学院">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          图像信息处理复习坑
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-01-14 03:50:38" itemprop="dateCreated datePublished" datetime="2016-01-14T03:50:38+08:00">2016-01-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2016-07-19 14:55:51" itemprop="dateModified" datetime="2016-07-19T14:55:51+08:00">2016-07-19</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2016/01/14/review-Image-Analysis/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/01/14/review-Image-Analysis/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>按照课本（讲义）顺序的一个复（yu）习纲要，也参考了PPT。</p>
+<h2 id="图像特征提取"><a href="#图像特征提取" class="headerlink" title="图像特征提取"></a>图像特征提取</h2><p><strong>问题</strong></p>
+<ul>
+<li><strong><em>通用</em></strong> 的视觉特征和 <strong><em>领域相关</em></strong> 的视觉特征</li>
+<li>前者主要包括色彩、纹理和形状；后者与应用相关，如人脸特征、指纹特征等</li>
+<li>因此， <strong><em>视觉特征选取</em></strong> 非常重要</li>
+</ul>
+<p><strong>步骤</strong></p>
+<ul>
+<li>Extraction：特征提取</li>
+<li>Representation：特征表达</li>
+<li>Discrimination：区别性特征选择</li>
+<li>Indexing/Hashing：特征索引</li>
+</ul>
+<p><strong>挑战</strong></p>
+<ul>
+<li>复杂度</li>
+<li>特征不变性：尺度无关、变换无关等</li>
+<li>特征的本征结构</li>
+<li>特征距离度量算子（Distance Metric）</li>
+</ul>
+<a id="more"></a>
+
+<h3 id="图像颜色特征"><a href="#图像颜色特征" class="headerlink" title="图像颜色特征"></a>图像颜色特征</h3><ul>
+<li>对图像尺寸、方向、视角的依赖性较小，鲁棒性好</li>
+<li>多种颜色空间，灰度、RGB、HSV等</li>
+<li>需要 <strong><em>量化方法</em></strong> 和 <strong><em>距离标准</em></strong></li>
+</ul>
+<h4 id="颜色直方图"><a href="#颜色直方图" class="headerlink" title="颜色直方图"></a>颜色直方图</h4><p><strong>特点</strong></p>
+<ul>
+<li>要归一化到[0,1]空间</li>
+<li>优点：给出了像素点在图中的统计信息</li>
+<li>缺点：和空间位置无关，无法描述物体</li>
+</ul>
+<p><strong>计算</strong></p>
+<ol>
+<li>颜色量化：将颜色空间划分成若干个小的颜色区间，每个小区间成为直方图的一个bin</li>
+<li>计算落在每个小区的像素数量，即可得到直方图</li>
+</ol>
+<p><strong>用处</strong></p>
+<ul>
+<li>计算图像之间的相似度</li>
+<li>图像均衡</li>
+<li>图像切分</li>
+</ul>
+<p><strong>图像均衡化/直方图归一化</strong><br>思想：直方图中的值/所有像素点的值加起来为1。<br>处理方法：</p>
+<ol>
+<li>先计算频数，然后计算每个灰度值的累计分布次数（即小于等于此灰度值的点出现的次数）</li>
+<li>每个点的灰度值=round(当前点累计分布次数cdf(v) - 最小累计分布次数cdfmin) / (像素总数M * N - cdfmin) * (灰度区间长度L-1)</li>
+<li>重新绘制直方图，即为均衡后的直方图</li>
+</ol>
+<p><strong>结果</strong><br>累计直方图接近正比例函数</p>
+<p><strong>从聚类和量化角度看</strong><br>颜色直方图中的Bins就是将颜色空间划分成若干个小的颜色空间，可视为 <strong><em>颜色量化</em></strong></p>
+<h4 id="颜色矩"><a href="#颜色矩" class="headerlink" title="颜色矩"></a>颜色矩</h4><p><strong>特点</strong></p>
+<ul>
+<li>图像中任何颜色分布都可以用它的矩来表示</li>
+<li>颜色分布信息主要集中在低阶矩中，因此仅采用一阶矩（mean）、二阶矩（variance）和三阶矩（skewness）就可以表达图像的颜色分布</li>
+<li>与颜色直方图相比，这种方法无需对特征进行向量化</li>
+</ul>
+<p><strong>计算方式</strong></p>
+<ul>
+<li>一阶矩 µ = 1/Ν * Σx 即所有像素均值</li>
+<li>二阶矩 σ = ( 1/Ν * Σ(x-µ)^2 )^1/2 即方差开根号</li>
+<li>三阶矩 s = ( 1/Ν * Σ(x-µ)^3 )^1/3</li>
+<li>彩色图像，RGB3个颜色分量，每个颜色分量求3个低阶矩，一共9个值</li>
+</ul>
+<h4 id="颜色集"><a href="#颜色集" class="headerlink" title="颜色集"></a>颜色集</h4><p><del>这个ppt里都没有是不是一定不会考啊</del><br>大概思路就是先把RGB转化成HSV，并把颜色空间向量化成若干个Bin。<br>然后用色彩自动分割技术把图像划分为若干区域，每个区域用量化颜色空间的某个颜色分量来索引，从而得到一个二进制的颜色索引集。<br>匹配的时候比较不同图像颜色集之间的距离和色彩域的空间关系，包裹分离、包含、交等操作。<br>因为表达为二进制的特征向量，所以可以构造二分查找树，适用于大规模图像。</p>
+<p><strong>RGB转HSV</strong><br>v = max(r, g, b)<br>s = [v - min(r, g, b)] / v<br>h =<br>  5 + b’ if r=max(rgb) and g=min(rgb)<br>  1 - g’ if r=max(rgb) and g!=min(rgb)<br>  1 + r’ if g=max(rgb) and b=min(rgb)<br>  3 - b’ if g=max(rgb) and b!=min(rgb)<br>  3 + g’ if b=max(rgb) and r=min(rgb)<br>  5 - r’ otherwise<br>r’ = [v - r] / [v-min(r, g, b)]<br>g’ = [v - g] / [v-min(r, g, b)]<br>b’ = [v - b] / [v-min(r, g, b)]</p>
+<h4 id="颜色聚合向量（看上去很像重点）"><a href="#颜色聚合向量（看上去很像重点）" class="headerlink" title="颜色聚合向量（看上去很像重点）"></a>颜色聚合向量（看上去很像重点）</h4><p><strong>核心思想</strong><br>将属于同一色度的像素点分为两部分：如果同属同一颜色值的某些像素点所占连续区域面积大于给定阈值，则该区域内像素点作为聚合像素，否则作为非聚合像素。</p>
+<p><strong>步骤</strong></p>
+<ol>
+<li>平均化，用每个像素点周围8个像素的均值代替此点。然后将每个灰度点的值离散化，使图像中只有L种不同灰度，也即L个Bins。</li>
+<li>对于每个灰度值，将像素点值等于它的所有像素点分类为连贯和不连贯两部分。</li>
+<li>把灰度值相同的所有像素点以及他们之间的距离看成一张无向加权图，通过最小生成树（MST）算法分别得到 <strong>某个灰度值</strong> 的联通像素点数目和非联通像素点数目。<ol>
+<li>Dn={di} (1&lt;=i&lt;=K) 表示灰度值为n的所有像素点组成的集合，也即灰度值为n的像素数目为K。定义无向加权图G(Dn)=(V,E)，其中V表示所有点集，E表示所有边集。图G(Dn)的生成树T(Dn)=(V,E’)被定义为G(Dn)的一棵子树，T(Dn)满足：包含了G(Dn)的所有定点，且T(Dn)中不会有环路出现</li>
+<li>G(Dn)中每条边ρ(di,dj)的权值就是di和dj两点之间的几何距离。则无向加权图G(Dn)的最小生成树就是使所有边加权和最小的生成树</li>
+<li>最小生成树要求：任意增加一条边则会产生回路，且任意去掉一条边则会变成非联通图。使用贪婪算法来生成：先取任意一个点为起点；之后选所有点中离当前点最近的、且未被联通的点，和当前点相连；之后每一步都选择到现在树上任意一点距离最近的点，将这个点和这条最短的边添加到树上；直到所有点都被添加</li>
+<li>得到最小生成树后，如果任意一条边的距离大于 τ = sqrt(M * N) * 5%，则将这条边去除。这样，图像就分成了联通点和非联通点。对于所有灰度值，重复上述计算。</li>
+</ol>
+</li>
+</ol>
+<p><strong>用法</strong><br>两个图像之间的距离 ΔCCV = Σ( |αj-α’j| + |βj-β’j| )<br>两个直方图之间的距离 ΔCΗ = Σ| (αj + βj) - (α’j + β’j) |<br>可以减少对直方图相同而实际不同的图像的误识别<br>得到的α就是一幅图中所有连续区域内的像素的点的数目之和，β是所有不连续的像素点的数目之和（对同一个灰度值j）</p>
+<h4 id="颜色相关图"><a href="#颜色相关图" class="headerlink" title="颜色相关图"></a>颜色相关图</h4><p>不但刻画了某一种颜色的像素数量占整个图像的比例，还反映了具有两种颜色的像素点之间的空间相关性。<br><strong>方法</strong></p>
+<ol>
+<li>给定距离k</li>
+<li>对于任意一个像素点P1，如果其灰度值为C(i)，计算存在下述像素点的概率是多少：<br>与之相距k，灰度值为C(j)的像素点</li>
+<li>一般而言，将这样配对出现像素点的数目作为概率值，如果没有这样的匹配对，则置为0.或者采取归一化方法，计算概率值</li>
+<li>如果灰度值为d，则得到一个d * d大小的矩阵</li>
+</ol>
+<p><strong>结果</strong></p>
+<ul>
+<li>矩阵第L行和第M列值，表示色彩值L和色彩值为M、距离为k配对像素点一共出现的次数</li>
+<li>颜色相关图一定程度上考虑了像素点色度值和空间信息</li>
+<li>如果考虑到任何颜色之间的相关性，颜色相关图会变得非常复杂和庞大（空间复杂度为O(n^2d)）</li>
+</ul>
+<h3 id="图像相似度比较方法"><a href="#图像相似度比较方法" class="headerlink" title="图像相似度比较方法"></a>图像相似度比较方法</h3><p>常用的图像相似度的比较方法都是基于向量空间模型，即将图像特征看做是向量空间中的点，通过计算两个点之间的接近程度来衡量图像特征间的相似度。</p>
+<ul>
+<li>后期会学到降维</li>
+<li>这里不考虑特征向量之间的相关性</li>
+</ul>
+<h4 id="欧拉距离"><a href="#欧拉距离" class="headerlink" title="欧拉距离"></a>欧拉距离</h4><ul>
+<li>L1范式距离：D(H1, H2) = Σ| h(1,i) - h(2,i) |</li>
+<li>L2范式距离：D(H1, H2) = sqrt( Σ(h(1,i) -h(2,i))^2 ) （即欧式距离）</li>
+</ul>
+<h4 id="直方图交"><a href="#直方图交" class="headerlink" title="直方图交"></a>直方图交</h4><ul>
+<li>直方图的交：D(H1, H2) = 1 - Σmin( h(1,i), h(2,i) ) / min( Σh(1,i), Σh(2,i) )</li>
+</ul>
+<p>如果两幅图完全一样，直方图的交的距离为0；如果两幅图在直方图意义上视觉差距很大，则接近1。<br>直方图的交是直方图相似度计算的最佳算子。</p>
+<h4 id="二次式距离"><a href="#二次式距离" class="headerlink" title="二次式距离"></a>二次式距离</h4><p><del>这个PPT里也没有啊</del><br><strong>用途</strong><br>然而二次式距离再许多方面已经被证明比欧拉距离或者直方图相交距离更有效。<del>喂PPT上不是这样说的啊</del><br>因为这种距离考虑到了不同颜色之间存在的相似度。<br><strong>公式</strong><br>两个颜色直方图I和Q之间的二次式距离可以表示为：<br>D = ( Q - I )^t A( Q - I )<br>引入颜色相似性矩阵A = [aij]，表示直方图中下表为i和j的两个颜色bin之间的相似度。可以通过色彩心理学研究获得。</p>
+<p>或者可以先对颜色直方图求闭包操作，使得每个颜色bin的值都受到来自他相邻颜色bin的影响。这样，颜色直方图本身就包含了不同颜色之间的相似性因素，因此可以直接使用欧拉距离或直方图相交距离。<br>这种预处理的好处是检索过程中计算相似度的代价较小。</p>
+<h4 id="马氏距离"><a href="#马氏距离" class="headerlink" title="马氏距离"></a>马氏距离</h4><p><del>另外一个PPT里没有的</del><br><strong>用途</strong><br>用于特征向量的各个分量间具有相关性或者具有不同的权重。<br><strong>公式</strong><br>Dmahal = ( A - B )^t C^-1 ( A - B )<br>其中C是特征向量的协方差矩阵。<br><strong>简化</strong><br>特征向量的各分量之间没有相关性的时候，只需要计算每个分量的方差ci，因此可以简化为：<br>Ds = Σ( (Ai-Bi)^2 / ci )</p>
+<h4 id="Hausdorff距离（看上去很像重点）"><a href="#Hausdorff距离（看上去很像重点）" class="headerlink" title="Hausdorff距离（看上去很像重点）"></a>Hausdorff距离（看上去很像重点）</h4><p><strong>用途</strong><br>用于计算维数不一样的向量之间的相似度。<br><strong>公式</strong><br>假设向量A，B的维度分别为m,n：<br>H(A,B) = max( h(A,B), h(B,A) )<br>h(A,B) = max_a∈A min_b∈B D(a,b)<br>D(a,b)表示A，B中任意两个分量之间的距离，根据实际情况定义<br>H(A,B)表示：任意属于A的分量，在B中找到距离D下最相似的分量。然后将A和B中最不相似的两个分量之间的距离作为A和B之间的Hausdorff距离。<br><strong>应用</strong></p>
+<ul>
+<li>时序处理（动态规划DP/动态时间卷曲DTW）</li>
+<li>时序系列对齐</li>
+<li>形状对应点对齐</li>
+</ul>
+<h4 id="非几何的相似度方法"><a href="#非几何的相似度方法" class="headerlink" title="非几何的相似度方法"></a>非几何的相似度方法</h4><ul>
+<li>之前的方法都是基于向量空间模型，在欧式几何空间里运算</li>
+<li>解决方法 <del>公式看不懂</del> 还不够实用 <del>反正ppt上也没有不看了</del></li>
+</ul>
+<h3 id="图像纹理特征"><a href="#图像纹理特征" class="headerlink" title="图像纹理特征"></a>图像纹理特征</h3><p><strong>什么是纹理</strong></p>
+<ul>
+<li>纹理是对图像中色彩或色度值空间分布的一种描述</li>
+<li>不依赖于 <strong><em>颜色</em></strong> 或 <strong><em>亮度</em></strong></li>
+<li>是 <strong><em>物体材料</em></strong> 本身固有特性，不随外界改变而改变</li>
+<li>纹理是图像中像素点 <strong><em>局部分布和全局分布</em></strong> 的统一</li>
+</ul>
+<p><strong>分类</strong></p>
+<ul>
+<li>纹理分为结构纹理和统计纹理</li>
+<li>结构纹理：由一系列 <strong><em>纹理基元</em></strong> 按照一定规则或重复关系组合而成，但是实际生活中很难定义研究</li>
+<li>统计纹理：对某一区域色彩或灰度值在空间分布的一种 <strong><em>数值度量</em></strong> 。不直观，但是计算速度快，而且自然界图像大多由不规则成分组成。</li>
+</ul>
+<h4 id="Tamura纹理特征"><a href="#Tamura纹理特征" class="headerlink" title="Tamura纹理特征"></a>Tamura纹理特征</h4><p><del>不是特污曼纹理特征</del><br>基于心理学角度对纹理的感知，包括 <strong><em>粗糙度</em></strong>、*<strong>对比度**<em>、</em></strong>方向度*<strong>、**<em>线像度</em></strong>、*<strong>规整度*** 和 *</strong>粗略度***。其中前三个尤其重要。</p>
+<ol>
+<li>粗糙度：比较复杂，和其周围2^k * 2^k个点有关</li>
+<li>对比度：Fcon = σ / α4^(1/4), α4 = μ4/α^4</li>
+<li>方向度：要卷积，和梯度向量的模有关</li>
+</ol>
+<p><strong>卷积</strong><br>不同卷积矩阵有不同效果<br>图像卷积结果一定要做额外处理，比如保证值域正确</p>
+<h4 id="灰度共生纹理特征"><a href="#灰度共生纹理特征" class="headerlink" title="灰度共生纹理特征"></a>灰度共生纹理特征</h4><p><strong>什么事灰度共生矩阵</strong></p>
+<ul>
+<li>若像素点灰度值为256，则灰度共生矩阵为256 * 256</li>
+<li>第i行第j列(i,j)表示：符合某一约束条件，灰度值为i何j的像素点共同出现的次数</li>
+<li>一般用(d,θ)表示像素点和像素点之间的约束条件。eg (1,0)表示neighbor点在reference点右边</li>
+</ul>
+<p><strong>灰度共生矩阵的解释</strong></p>
+<ul>
+<li>灰度共生矩阵中对角线上的值越大，表示图像对比度越小</li>
+<li>与对角线平行，且离对角线越近的平行线上值越大，表示图像的对比度越小</li>
+<li>与对角线平行，且离对角线越远的平行线上值越大，表示图像的对比度越大</li>
+</ul>
+<p><strong>提取的特征</strong></p>
+<ol>
+<li>能量：图像灰度共生矩阵中值平方后累加的结果</li>
+<li>对比度：某个像素点与其领域像素点之间的区别程度。对比度为0则灰度值相等。</li>
+<li>同质性：灰度共生矩阵个元素分布与其对角线的靠近程度。若图像中各点灰度区别度不大，即像素点趋于同质，则同质性对应取值就越大</li>
+<li>熵：度量灰度共生矩阵提供的信息量。信息量与该事件概率的倒数成正比，平均信息量就是熵</li>
+<li>相关性：指定像素对出现的联合概率，即测量整个图像中某个像素与其领域相关性</li>
+</ol>
+<p><strong>皮尔森相关系数/样本相关系数</strong><br><del>怎么看都是协方差和相关系数</del><br>ρ和r的值越大，表明X和Y的相关性越强。&gt;0正相关，&lt;0负相关。</p>
+<h3 id="图像形状特征"><a href="#图像形状特征" class="headerlink" title="图像形状特征"></a>图像形状特征</h3><h4 id="SIFT特征（必须是重点）"><a href="#SIFT特征（必须是重点）" class="headerlink" title="SIFT特征（必须是重点）"></a>SIFT特征（必须是重点）</h4><p><del>其实MR课讲的很清楚了</del><br><strong>算法步骤</strong></p>
+<ol>
+<li>构造不同尺度的高斯滤波算子，对图像进行不同尺度的高斯模糊，获得一系列不同尺度的高斯模糊图像。注意此时像素点数目没有发生任何改变。</li>
+<li>构造高斯差图像：两个经过不同方差的高斯滤波后的图像相减，可视为“带通滤波”，保留了原始图像中位于某些空间的结构属性，如边界等。</li>
+<li>搜索候选极大/小值点：与周围26个像素点比较，极大或极小点作为候选关键点。</li>
+<li>去除候选极大/小值点种可能噪音点：<ul>
+<li>去除其中对比度较低，以及位于图像边缘附近的点：对高斯差图像进行二阶泰勒展开，对X进行一阶求导，令导数为0，得到真正X^的位置公式，带回泰勒展开式。结果含D(X^)，令|D(X^)|&lt;0.03即可去除与周围像素点对比度较低的关键点。</li>
+<li>去除噪音像素点：Hessian矩阵，α为最大特征根，β为次大特征根，α=rβ，则(rβ+β)^2 / rβ^2 &lt; (r+1)^2/r，采用r=10做阈值，上式成立的关键点才是真的关键点。</li>
+</ul>
+</li>
+<li>极大/小值点方向表示：对每个关键点，形成16 * 16的块，对其中每个像素点计算梯度模和方向。</li>
+<li>SIFT点的描述生成：对每个块按照4 * 4切分，得到16个子块，每个块中每个像素点方向已知，因此分成8个区间，构成8Bin的方向直方图。每一个Bin分别代表上、下、左、右、左上、右上、左下、右下等8个方向。磊将所有像素点梯度的模的值，再乘以当前高斯滤波卷积方差σ，再乘1.5，作为这个Bin的大小。得到4 * 4 * 8 = 128维的特征向量。即为SIFT描述。</li>
+</ol>
+<h4 id="上下文形状特征"><a href="#上下文形状特征" class="headerlink" title="上下文形状特征"></a>上下文形状特征</h4><p>上下文形状描述符，基于Canny算子<br><strong>Canny算子</strong></p>
+<p><strong>算法步骤</strong></p>
+<ol>
+<li>定位图像边界点</li>
+<li>跟踪提取边界片段</li>
+<li>对每个边界像素点提取其与其他边界像素点之间的context信息</li>
+<li>行程Shape Context的描述</li>
+</ol>
+<h4 id="形状无关矩"><a href="#形状无关矩" class="headerlink" title="形状无关矩"></a>形状无关矩</h4><p>1~7阶中心矩</p>
+<h4 id="局部二值模式（LBP）"><a href="#局部二值模式（LBP）" class="headerlink" title="局部二值模式（LBP）"></a>局部二值模式（LBP）</h4><p>基本思想：用一组0/1编码来表示每个像素点与周围像素点之间的空间大小关系</p>
+<ul>
+<li>从3 * 3方格左上角开始，顺时针或逆时针转圈，如果某个周围像素点大于中心像素点则记为1，否则记为0。一般把得到的8为二进制串转换为十进制的数。</li>
+<li>结果是0~255之间的数，因此可以统计出一个256维的直方图。这个直方图构成了图像的LBP纹理/形状特征</li>
+<li>世纪可以改变方格大小或者按照一定步长采用领域像素点，得到更为灵活的方格LBP编码</li>
+</ul>
+<h2 id="图像视觉单词构造与特征学习"><a href="#图像视觉单词构造与特征学习" class="headerlink" title="图像视觉单词构造与特征学习"></a>图像视觉单词构造与特征学习</h2><p>概述略</p>
+<h3 id="自然语言能处理中的文档词袋"><a href="#自然语言能处理中的文档词袋" class="headerlink" title="自然语言能处理中的文档词袋"></a>自然语言能处理中的文档词袋</h3><h3 id="图像中视觉单词提取"><a href="#图像中视觉单词提取" class="headerlink" title="图像中视觉单词提取"></a>图像中视觉单词提取</h3><p><strong>k-means聚类算法</strong></p>
+<ol>
+<li>初始化得到K个初始聚类质心，维度均为128维。也可以选K个SIFT特征作为初始聚类质心</li>
+<li>计算每个Fi（从图像中提取的第i个SIFT特征）点与K个聚类质心的距离，将Fi放入与其最小的聚类质心所在集合</li>
+<li>如下更新每个聚类集合中的质心：新的聚类质心为所得到聚类集合中所包含元素的均值</li>
+<li>比较前后两次聚类中，对于新旧的聚类集合，其旧聚类质心与新聚类质心是否接近，如果接近则完成，否则返回2</li>
+<li>如果迭代步骤超过一定次数，仍不接近，则说明算法收敛较慢，也退出K平均聚类</li>
+<li>得到的K个聚类质心作为视觉单词</li>
+</ol>
+<p><strong>归一化谱聚类算法</strong></p>
+<ol>
+<li>任意两个数据xi,xj之间相似性形成的相似矩阵 S = exp( -||xi-xj|| / 2σ^2 )</li>
+<li>归一化拉普拉斯矩阵 L = I - D^(-1/2)SD^(-1/2)</li>
+<li>I是单位对角矩阵，D是对角矩阵diag(d1, … ,dn) di = Σ_j=1:n S(xi,xj) 即di为数据xi与它所有数据xj相似度之和</li>
+<li>选取L的m个最大特征值对应的特征向量，记其为Z，对它的每一行归一化为单位长度，得到Y</li>
+<li>用K平均算法把数据点yi聚成k个cluster V1, … , Vk.</li>
+</ol>
+<h3 id="图像视觉单词关联关系表示"><a href="#图像视觉单词关联关系表示" class="headerlink" title="图像视觉单词关联关系表示"></a>图像视觉单词关联关系表示</h3><h4 id="基于统计方法的关联性建立"><a href="#基于统计方法的关联性建立" class="headerlink" title="基于统计方法的关联性建立"></a>基于统计方法的关联性建立</h4><h4 id="图像金字塔模型"><a href="#图像金字塔模型" class="headerlink" title="图像金字塔模型"></a>图像金字塔模型</h4><p>两种方法：逐次分割成不同大小尺寸的图像方格/采样成不同尺度的图像</p>
+<h2 id="图像高维特征降维基本理论"><a href="#图像高维特征降维基本理论" class="headerlink" title="图像高维特征降维基本理论"></a>图像高维特征降维基本理论</h2><p>线性降维和非线性降维</p>
+<ul>
+<li>线性降维：主成分分析PCA、多维尺度分析MDS、线性判别分析LDA。主要思路是在原始空间设计得到一系列特征向量，然后通过对这些特征向量进行线性组合来达到高维特征降维的目的。优点在于课通过简单变换函数实现原始高维数据降维。</li>
+<li>非线性降维：适用于原始高维数据分布在非线性特征空间中，如等距映射ISOMAP、局部线性嵌入LLE、拉普拉斯特征映射LE、局部不变投影LPP等。<br>局部保持与全局保持降维</li>
+<li>局部保持：LLE、LPP等</li>
+<li>全局保持：ISOMAP、PCA等<br>监督学习将为和非监督学习降维</li>
+<li>监督降维：LDA</li>
+<li>非监督降维：PCA、LPP</li>
+</ul>
+<h3 id="奇异值分解及其应用"><a href="#奇异值分解及其应用" class="headerlink" title="奇异值分解及其应用"></a>奇异值分解及其应用</h3><h4 id="奇异值分解（SVD）"><a href="#奇异值分解（SVD）" class="headerlink" title="奇异值分解（SVD）"></a>奇异值分解（SVD）</h4><h4 id="隐形语义分析（LSI）"><a href="#隐形语义分析（LSI）" class="headerlink" title="隐形语义分析（LSI）"></a>隐形语义分析（LSI）</h4><p>奇异值分解在文本分析中也叫做隐形语义分析（LSI）。</p>
+<h3 id="主成分分析降维及其应用"><a href="#主成分分析降维及其应用" class="headerlink" title="主成分分析降维及其应用"></a>主成分分析降维及其应用</h3><h4 id="特征人脸方法"><a href="#特征人脸方法" class="headerlink" title="特征人脸方法"></a>特征人脸方法</h4><p>本质：通过人脸表达人脸，而不是通过像素点表达人脸<br>实现：使用奇异值分解或PCA</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Review/" rel="tag"># Review</a>
+              <a href="/tags/%E5%9B%BE%E5%83%8F%E4%BF%A1%E6%81%AF%E5%A4%84%E7%90%86/" rel="tag"># 图像信息处理</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/01/14/review-Probability-Theory-and-Mathematical-Statistics/" rel="prev" title="概率论和数理统计急救指南">
+      <i class="fa fa-chevron-left"></i> 概率论和数理统计急救指南
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/01/14/review-Voice-and-Video-Analysis/" rel="next" title="数字音视频处理复习坑">
+      数字音视频处理复习坑 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96"><span class="nav-number">1.</span> <span class="nav-text">图像特征提取</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E9%A2%9C%E8%89%B2%E7%89%B9%E5%BE%81"><span class="nav-number">1.1.</span> <span class="nav-text">图像颜色特征</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%9C%E8%89%B2%E7%9B%B4%E6%96%B9%E5%9B%BE"><span class="nav-number">1.1.1.</span> <span class="nav-text">颜色直方图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%9C%E8%89%B2%E7%9F%A9"><span class="nav-number">1.1.2.</span> <span class="nav-text">颜色矩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%9C%E8%89%B2%E9%9B%86"><span class="nav-number">1.1.3.</span> <span class="nav-text">颜色集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%9C%E8%89%B2%E8%81%9A%E5%90%88%E5%90%91%E9%87%8F%EF%BC%88%E7%9C%8B%E4%B8%8A%E5%8E%BB%E5%BE%88%E5%83%8F%E9%87%8D%E7%82%B9%EF%BC%89"><span class="nav-number">1.1.4.</span> <span class="nav-text">颜色聚合向量（看上去很像重点）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%9C%E8%89%B2%E7%9B%B8%E5%85%B3%E5%9B%BE"><span class="nav-number">1.1.5.</span> <span class="nav-text">颜色相关图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E7%9B%B8%E4%BC%BC%E5%BA%A6%E6%AF%94%E8%BE%83%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">图像相似度比较方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AC%A7%E6%8B%89%E8%B7%9D%E7%A6%BB"><span class="nav-number">1.2.1.</span> <span class="nav-text">欧拉距离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%96%B9%E5%9B%BE%E4%BA%A4"><span class="nav-number">1.2.2.</span> <span class="nav-text">直方图交</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E6%AC%A1%E5%BC%8F%E8%B7%9D%E7%A6%BB"><span class="nav-number">1.2.3.</span> <span class="nav-text">二次式距离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB"><span class="nav-number">1.2.4.</span> <span class="nav-text">马氏距离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hausdorff%E8%B7%9D%E7%A6%BB%EF%BC%88%E7%9C%8B%E4%B8%8A%E5%8E%BB%E5%BE%88%E5%83%8F%E9%87%8D%E7%82%B9%EF%BC%89"><span class="nav-number">1.2.5.</span> <span class="nav-text">Hausdorff距离（看上去很像重点）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%9E%E5%87%A0%E4%BD%95%E7%9A%84%E7%9B%B8%E4%BC%BC%E5%BA%A6%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.6.</span> <span class="nav-text">非几何的相似度方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E7%BA%B9%E7%90%86%E7%89%B9%E5%BE%81"><span class="nav-number">1.3.</span> <span class="nav-text">图像纹理特征</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Tamura%E7%BA%B9%E7%90%86%E7%89%B9%E5%BE%81"><span class="nav-number">1.3.1.</span> <span class="nav-text">Tamura纹理特征</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%81%B0%E5%BA%A6%E5%85%B1%E7%94%9F%E7%BA%B9%E7%90%86%E7%89%B9%E5%BE%81"><span class="nav-number">1.3.2.</span> <span class="nav-text">灰度共生纹理特征</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E5%BD%A2%E7%8A%B6%E7%89%B9%E5%BE%81"><span class="nav-number">1.4.</span> <span class="nav-text">图像形状特征</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SIFT%E7%89%B9%E5%BE%81%EF%BC%88%E5%BF%85%E9%A1%BB%E6%98%AF%E9%87%8D%E7%82%B9%EF%BC%89"><span class="nav-number">1.4.1.</span> <span class="nav-text">SIFT特征（必须是重点）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E5%BD%A2%E7%8A%B6%E7%89%B9%E5%BE%81"><span class="nav-number">1.4.2.</span> <span class="nav-text">上下文形状特征</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BD%A2%E7%8A%B6%E6%97%A0%E5%85%B3%E7%9F%A9"><span class="nav-number">1.4.3.</span> <span class="nav-text">形状无关矩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E4%BA%8C%E5%80%BC%E6%A8%A1%E5%BC%8F%EF%BC%88LBP%EF%BC%89"><span class="nav-number">1.4.4.</span> <span class="nav-text">局部二值模式（LBP）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E8%A7%86%E8%A7%89%E5%8D%95%E8%AF%8D%E6%9E%84%E9%80%A0%E4%B8%8E%E7%89%B9%E5%BE%81%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.</span> <span class="nav-text">图像视觉单词构造与特征学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E8%83%BD%E5%A4%84%E7%90%86%E4%B8%AD%E7%9A%84%E6%96%87%E6%A1%A3%E8%AF%8D%E8%A2%8B"><span class="nav-number">2.1.</span> <span class="nav-text">自然语言能处理中的文档词袋</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E4%B8%AD%E8%A7%86%E8%A7%89%E5%8D%95%E8%AF%8D%E6%8F%90%E5%8F%96"><span class="nav-number">2.2.</span> <span class="nav-text">图像中视觉单词提取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E8%A7%86%E8%A7%89%E5%8D%95%E8%AF%8D%E5%85%B3%E8%81%94%E5%85%B3%E7%B3%BB%E8%A1%A8%E7%A4%BA"><span class="nav-number">2.3.</span> <span class="nav-text">图像视觉单词关联关系表示</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%BB%9F%E8%AE%A1%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%B3%E8%81%94%E6%80%A7%E5%BB%BA%E7%AB%8B"><span class="nav-number">2.3.1.</span> <span class="nav-text">基于统计方法的关联性建立</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E9%87%91%E5%AD%97%E5%A1%94%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.3.2.</span> <span class="nav-text">图像金字塔模型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E9%AB%98%E7%BB%B4%E7%89%B9%E5%BE%81%E9%99%8D%E7%BB%B4%E5%9F%BA%E6%9C%AC%E7%90%86%E8%AE%BA"><span class="nav-number">3.</span> <span class="nav-text">图像高维特征降维基本理论</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8"><span class="nav-number">3.1.</span> <span class="nav-text">奇异值分解及其应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A5%87%E5%BC%82%E5%80%BC%E5%88%86%E8%A7%A3%EF%BC%88SVD%EF%BC%89"><span class="nav-number">3.1.1.</span> <span class="nav-text">奇异值分解（SVD）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%90%E5%BD%A2%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90%EF%BC%88LSI%EF%BC%89"><span class="nav-number">3.1.2.</span> <span class="nav-text">隐形语义分析（LSI）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%E9%99%8D%E7%BB%B4%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8"><span class="nav-number">3.2.</span> <span class="nav-text">主成分分析降维及其应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E4%BA%BA%E8%84%B8%E6%96%B9%E6%B3%95"><span class="nav-number">3.2.1.</span> <span class="nav-text">特征人脸方法</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ZJUBank"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZJUBank</p>
+  <div class="site-description" itemprop="description">「みんなで叶える物語」</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zjubank" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zjubank" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZJUBank</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://zjubank.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://zjubank.com/2016/01/14/review-Image-Analysis/";
+    this.page.identifier = "2016/01/14/review-Image-Analysis/";
+    this.page.title = "图像信息处理复习坑";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://zjubank.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
